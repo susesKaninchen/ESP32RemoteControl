@@ -7,6 +7,7 @@ byte lastShiftState = 0;
 
 // ############################################## Power MOSFET
 long lastAction = millis();
+float batteriespannung = 0;
 
 // Enable Mosfet
 void enablePower(bool enable) {
@@ -19,7 +20,25 @@ void enablePower(bool enable) {
     digitalWrite(PIN_MOSFET, HIGH);       // Enable Power
   } else {
     digitalWrite(PIN_MOSFET, LOW);       // Disable Power
+    esp_deep_sleep_start();
   }
+}
+
+// Read Batterie
+bool readAkku() {
+  float r1 = 100000.0;
+  float r2 = 10000.0;
+  int messwehrt = analogRead(PIN_AKKU_VOLTAGE);
+  float vout = (messwehrt * 3.3) / 1024.0;
+  float newBatSpan = vout / (r2 / (r1 + r2));
+  bool batteriespannungChanged = (newBatSpan != batteriespannung);
+  batteriespannung = newBatSpan;
+#ifdef DEBUG_CONSOLE
+  Serial.print("Lese Akku: ");
+  Serial.println(batteriespannung);
+  Serial.println();
+#endif
+  return batteriespannungChanged;
 }
 
 void checkTimeout() {
@@ -128,8 +147,8 @@ void updateInput() {
 #endif
 }
 
-void initPins(){
-	// Pins
+void initPins() {
+  // Pins
   pinMode(PIN_MOSFET, OUTPUT);
   pinMode(PIN_SR_INPUT, INPUT);
   enablePower(true);

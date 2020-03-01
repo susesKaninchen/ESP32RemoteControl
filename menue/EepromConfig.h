@@ -1,8 +1,8 @@
 extern Config configSet;
 
 #include "EEPROM.h"
-void initEEPROM(){
-	EEPROM.begin(EEPROM_SIZE);
+void initEEPROM() {
+  EEPROM.begin(EEPROM_SIZE);
 }
 
 void saveConfig() {
@@ -12,7 +12,9 @@ void saveConfig() {
   Serial.println("+++++++++++++++++++++++++++++++++++ Config +++++++++++++++++++++++++++++++++++ ");
   Serial.println("Save Config auf EEPROM:");
   Serial.print("addrRF: ");
-  Serial.println((long)configSet.addrRF);
+  Serial.println(configSet.addrRfSend);
+  Serial.print("addrRfRecive: ");
+  Serial.println(configSet.addrRfRecive);
   Serial.print("rfStaerke: ");
   Serial.println(configSet.rfStaerke);
   Serial.print("webserverEnabled: ");
@@ -39,7 +41,9 @@ void loadConfig() {
 #ifdef DEBUG_CONSOLE
   Serial.println("+++++++++++++++++++++++++++++++++++ Config +++++++++++++++++++++++++++++++++++ ");
   Serial.print("addrRF: ");
-  Serial.println((int)temp.addrRF);
+  Serial.println(configSet.addrRfSend);
+  Serial.print("addrRfRecive: ");
+  Serial.println(configSet.addrRfRecive);
   Serial.print("rfStaerke: ");
   Serial.println((int)temp.rfStaerke);
   Serial.print("webserverEnabled: ");
@@ -62,7 +66,9 @@ void loadConfig() {
 #ifdef DEBUG_CONSOLE
   Serial.println("+++++++++++++++++++++++++++++++++++ Config +++++++++++++++++++++++++++++++++++ ");
   Serial.print("addrRF: ");
-  Serial.println((int)configSet.addrRF);
+  Serial.println(configSet.addrRfSend);
+  Serial.print("addrRfRecive: ");
+  Serial.println(configSet.addrRfRecive);
   Serial.print("rfStaerke: ");
   Serial.println((int)configSet.rfStaerke);
   Serial.print("webserverEnabled: ");

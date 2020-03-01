@@ -31,3 +31,5 @@
 #define PIN_STICK_RY 35
 #define PIN_STICK_LX 36
 #define PIN_STICK_LY 39
+
+#define PIN_AKKU_VOLTAGE 32

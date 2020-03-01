@@ -4,7 +4,10 @@
 
 extern Config configSet;
 extern Input_State stateInput;
+extern Reciv_Package recivPackage;
+extern int validateNumber;
 RF24 radio(RADIO_CE, RADIO_CS);
+int missingPackages = 0;
 
 // ############################################## Antenne
 
@@ -14,9 +17,29 @@ void RFsend() {
   Serial.println("Sende Paket->");
   Serial.println();
 #endif
+  radio.stopListening();
   radio.write(&stateInput, sizeof(stateInput));
+  if (configSet.recive) {
+    radio.startListening();
+  }
 }
 
+void RFrecive() {
+  if (radio.available()) {
+    radio.read( &recivPackage, sizeof(Reciv_Package) );
+    if (recivPackage.validate == validateNumber) {
+      missingPackages = 0;
+    } else {
+      missingPackages++;
+    }
+  } else {
+    missingPackages++;
+  }
+
+}
+
+/*
+// Unnötig
 void RFchangeRecive() {
 #ifdef DEBUG_CONSOLE
   Serial.print("Antenne empfangen: ");
@@ -28,16 +51,35 @@ void RFchangeRecive() {
   } else {
     radio.stopListening();
   }
-}
+}*/
 
-void RFchangeAddresse() {
+void RFchangeAddresseSend() {
 #ifdef DEBUG_CONSOLE
-  Serial.print("Antenne wechsle Adresse: ");
-  Serial.println((int)configSet.addrRF);
+  Serial.print("Antenne wechsle sende Adresse: ");
+  Serial.println(configSet.addrRfSend);
   Serial.println();
 #endif
   radio.stopListening();
-  radio.openWritingPipe(configSet.addrRF);
+  byte adressTemp[6];
+  for (int dd = 0; dd < 6; dd++) {
+    adressTemp[dd] = (byte) configSet.addrRfRecive[dd];
+  }
+  radio.openWritingPipe(adressTemp);
+}
+
+void RFchangeAddresseReciv() {
+#ifdef DEBUG_CONSOLE
+  Serial.print("Antenne wechsle empfangs Adresse: ");
+  Serial.println(configSet.addrRfRecive);
+  Serial.println();
+#endif
+  radio.stopListening();
+  byte adressTemp[6];
+  for (int dd = 0; dd < 6; dd++) {
+    adressTemp[dd] = (byte) configSet.addrRfRecive[dd];
+  }
+  radio.openWritingPipe(adressTemp);
+  radio.startListening();
 }
 
 void RFchangeLevel() {
@@ -66,5 +108,8 @@ void RFinit() {
 #endif
   radio.begin();                       // Initialisirung des Senders
   RFchangeLevel();
-  RFchangeAddresse();
+  RFchangeAddresseSend();
+  if (configSet.recive) {
+    RFchangeAddresseReciv();
+  }
 }

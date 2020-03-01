@@ -1,5 +1,7 @@
 // ############################################## Inputs
 
+int validateNumber = 56985;
+
 typedef struct
 {
   bool leftStick = 0;
@@ -14,18 +16,29 @@ typedef struct
   unsigned int leftStickY = 512;
   unsigned int rightStickX = 512;
   unsigned int rightStickY = 512;
+  int validate = validateNumber;
 }
 Input_State;
+
+typedef struct
+{
+  unsigned long timestamp = 0;
+  char akku = 100;
+  int validate = validateNumber;
+  // Alles was ihr so empfangen wollt
+}
+Reciv_Package;
 
 // ############################################## Config
 typedef struct
 {
-  uint32_t addrRF = 1256354;
+  char addrRfSend[6] = "Adres";
+  char addrRfRecive[6] = "adres";
   byte rfStaerke = 1;
   bool webserverEnabled = true;
   bool btEnabled = false;
   bool recive = false;
-  uint32_t timeout = 5 * 60 * 1000;
-  int validate = 123456;
+  uint32_t timeout = 1 * 60 * 1000;
+  int validate = 14347;
 }
 Config;

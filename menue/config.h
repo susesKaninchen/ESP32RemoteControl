@@ -1,6 +1,6 @@
 // Einfach auskommentieren, wenn ihr etwas deaktivieren wollt
 #define DEBUG_CONSOLE				// Deaktiviert die Console WIRD EMPFOHLEN ZU DEAKTIVIEREN
-#define ONLY_WEB					// Aktiviert = Deaktiviert die Inputs an de rFernbedienung
+//#define ONLY_WEB					// Aktiviert = Deaktiviert die Inputs an de rFernbedienung
 
 // ############################################## EEPROM
 #define EEPROM_SIZE 64

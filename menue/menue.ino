@@ -7,8 +7,9 @@
 #include "structs.h"
 #include "EepromConfig.h"
 #include "RF.h"
-#include "display.h"
+#include "displayV2.h"
 #include "PinInput.h"
+//#include "BLE.h"
 
 // ############################################## Varriablen ##############################################
 // ############################################## System/FreeRTOS
@@ -19,8 +20,12 @@ TaskHandle_t Task1, Task2;
 Input_State stateInput;
 bool &menueButtonPresses = stateInput.menueButton;
 
+Reciv_Package recivPackage;
+
 // ############################################## Config
 Config configSet;
+
+bool reloadTFT = true;
 
 // ############################################## Funktionen ##############################################
 // ############################################## Menue/Display
@@ -44,14 +49,19 @@ void menueRFpower() {
   RFchangeLevel();
 }
 
-void menueRFAdresse() {
-  menueLong(configSet.addrRF, menueStrings[0]);
-  RFchangeAddresse();
+void menueRfSendAdresse() {
+  menueString(configSet.addrRfSend, menueStrings[0]);
+  RFchangeAddresseSend();
+}
+
+void menueRfReciveAdresse() {
+  menueString(configSet.addrRfRecive, menueStrings[0]);
+  RFchangeAddresseReciv();
 }
 
 void menueRFrecive() {
   menueBool(configSet.recive, menueStrings[1]);
-  RFchangeRecive();
+  //RFchangeRecive();
 }
 
 
@@ -68,6 +78,9 @@ void setup() {
   loadConfig();
   RFinit();
   initTft();
+  //
+  //initBLE();
+
   //                      loop Function, Name, Stack size in words, Inputparameter, Prioretx (-1 best 0 lowest), task Handle, Core (0,1)
   xTaskCreatePinnedToCore(loopCPU1, "loopCPU1", 10000, NULL, -1, &Task1, 0);
   delay(DELAY_TASK);  // needed to start-up task1
@@ -76,19 +89,42 @@ void setup() {
 
 void loopCPU1( void * parameter )
 {
+
   for (;;) {
 #ifdef DEBUG_CONSOLE
     Serial.println("Loop ..");
     Serial.println();
 #endif
     updateInput();
+    Serial.println("Loop: Input");
     checkTimeout();
+    Serial.println("Loop: Timeout");
     if (menueButtonPresses) {
       handleMenue();
+      reloadTFT = true;
     } else {
       RFsend();
     }
-    delay(DELAY_LOOP);
+    Serial.println("Loop: Bildschirm");
+    // Hauptbildschirm Malen
+    if (reloadTFT) {
+      drawBlackAndTopLine();
+      drawWifi(configSet.webserverEnabled);
+      drawBT(configSet.btEnabled);
+      drawAdresse(configSet.addrRfSend, configSet.addrRfRecive);
+      reloadTFT = false;
+    }
+    if (readAkku()) {
+      drawAkku(batteriespannung);
+    }
+    delay(DELAY_LOOP);        // Delay to wait for packages;
+    // Deine Display (15:x)
+    if (!configSet.recive) {
+      drawNoRecive();
+    } else {
+      RFrecive();
+      drawRecive();
+    }
   }
 }
 
@@ -97,8 +133,22 @@ void loopCPU2( void * parameter )
   if (!configSet.webserverEnabled) {
     vTaskDelete(NULL);//  Kill this Task
   }
+
+  // Http Zeug
+  WiFiServer server(PORT_WEBSERVER);
+  const char* ssid     = "fablab";
+  const char* password = "fablabfdm";
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(DELAY_WIFI_CONNECTION);
+#ifdef DEBUG_CONSOLE
+    Serial.println(".");
+#endif
+  }
+  wlanVerbunden = true;
+  reloadTFT = true;
   // OTA
-  ArduinoOTA.setHostname("myesp32");
+  ArduinoOTA.setHostname("RemoteControlESP32");
   ArduinoOTA.setPassword("admin");
   ArduinoOTA
   .onStart([]() {
@@ -112,17 +162,7 @@ void loopCPU2( void * parameter )
 
   ArduinoOTA.begin();
 
-  // Http Zeug
-  WiFiServer server(PORT_WEBSERVER);
-  const char* ssid     = "fablab";
-  const char* password = "fablabfdm";
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(DELAY_WIFI_CONNECTION);
-#ifdef DEBUG_CONSOLE
-    Serial.println(".");
-#endif
-  }
+
   server.begin();
 #ifdef DEBUG_CONSOLE
   Serial.println("IP:");
@@ -131,6 +171,10 @@ void loopCPU2( void * parameter )
 #endif
   String header;
   for (;;) {
+
+    //handleBLE();
+
+
     if (!configSet.webserverEnabled) {
       vTaskDelete(NULL);//  Kill this Task
     }
@@ -200,8 +244,10 @@ void loopCPU2( void * parameter )
               // Web Page Heading
               client.println("<body><h1>Fernbedinung Web Server</h1>");
               client.println("<h2>Config</h2>");
-              client.print("addrRF: ");
-              client.println((int)configSet.addrRF);
+              client.print("addrRfSend: ");
+              client.println((int)configSet.addrRfSend);
+              client.print("addrRfSend: ");
+              client.println((int)configSet.addrRfSend);
               client.print("<br>rfStaerke: ");
               client.println(configSet.rfStaerke);
               client.print("<br>webserverEnabled: ");
@@ -259,4 +305,5 @@ void loopCPU2( void * parameter )
 void loop() {
   // Dieser Task wird nicht benötigt und ist nicht konfiguriert, deswegen wird er zerstört
   vTaskDelete(NULL);//  Kill this Task
+  delay(100);
 }
