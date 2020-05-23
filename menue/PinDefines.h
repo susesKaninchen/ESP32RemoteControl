@@ -13,9 +13,9 @@
    D18/CLK    SCK/CLK
    3V3        LED
 */
-#define TFT_CS         4
-#define TFT_RST        16
-#define TFT_DC         17
+//#define TFT_CS         4
+//#define TFT_RST        16
+//#define TFT_DC         17
 
 // ############################################## Antenne DEFINES
 #define RADIO_CE 21

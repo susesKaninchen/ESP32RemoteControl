@@ -39,10 +39,16 @@ bool isDown() {
   return stateInput.leftStickY < 512 - 400 || stateInput.rightStickY < 512 - 400 ;
 }
 
+uint16_t bgColor(uint16_t x, uint16_t y)
+{
+  return TFT_BLACK;
+}
+
 void initTft() {
   tft.init();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
+  tft.setCallback(bgColor); // Switch on color callback for anti-aliased fonts
 }
 
 void addRange(byte &i, byte minInt, byte maxInt) {
@@ -148,7 +154,7 @@ void drawBT(bool active) {
 }
 
 void drawAdresse(char* addrS, char* addrE) {
-  tft.fillRect(57, 2, 101, 12, TFT_BLACK);
+  //tft.fillRect(57, 2, 101, 12, TFT_BLACK);
   tft.drawRect(56, 1 , 102, 13, TFT_GREEN);
   tft.setCursor(59, 4);
   tft.setTextColor(0x666666);
@@ -178,9 +184,9 @@ void drawNoRecive() {
   tft.setTextWrap(true);
   tft.println("Empfangen deaktiviert, deshalb keine Daten vom Gerät, aber ich laufe schon:");
   long temp = millis();
-  tft.setCursor(30, 90);
-  tft.setTextColor(TFT_BLACK);
-  tft.print(lastTemp);
+  //tft.setCursor(30, 90);
+  //tft.setTextColor(TFT_BLACK);
+  //tft.print(lastTemp);
   tft.setCursor(30, 90);
   tft.setTextColor(TFT_WHITE);
   tft.print(temp);
