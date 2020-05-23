@@ -62,7 +62,7 @@ void RFchangeAddresseSend() {
   radio.stopListening();
   byte adressTemp[6];
   for (int dd = 0; dd < 6; dd++) {
-    adressTemp[dd] = (byte) configSet.addrRfSend[dd];
+    adressTemp[dd] = (byte) configSet.addrRfRecive[dd];
   }
   radio.openWritingPipe(adressTemp);
 }
@@ -78,7 +78,7 @@ void RFchangeAddresseReciv() {
   for (int dd = 0; dd < 6; dd++) {
     adressTemp[dd] = (byte) configSet.addrRfRecive[dd];
   }
-  radio.openReadingPipe(1,adressTemp);
+  radio.openWritingPipe(adressTemp);
   radio.startListening();
 }
 
