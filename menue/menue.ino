@@ -96,16 +96,22 @@ void loopCPU1( void * parameter )
     Serial.println();
 #endif
     updateInput();
+    #ifdef DEBUG_CONSOLE
     Serial.println("Loop: Input");
+    #endif
     checkTimeout();
+    #ifdef DEBUG_CONSOLE
     Serial.println("Loop: Timeout");
+    #endif
     if (menueButtonPresses) {
       handleMenue();
       reloadTFT = true;
     } else {
       RFsend();
     }
+    #ifdef DEBUG_CONSOLE
     Serial.println("Loop: Bildschirm");
+    #endif
     // Hauptbildschirm Malen
     if (reloadTFT) {
       drawBlackAndTopLine();
@@ -136,8 +142,6 @@ void loopCPU2( void * parameter )
 
   // Http Zeug
   WiFiServer server(PORT_WEBSERVER);
-  const char* ssid     = "fablab";
-  const char* password = "fablabfdm";
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(DELAY_WIFI_CONNECTION);
@@ -171,10 +175,7 @@ void loopCPU2( void * parameter )
 #endif
   String header;
   for (;;) {
-
     //handleBLE();
-
-
     if (!configSet.webserverEnabled) {
       vTaskDelete(NULL);//  Kill this Task
     }

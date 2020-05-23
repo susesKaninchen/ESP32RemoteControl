@@ -1,6 +1,6 @@
 // Einfach auskommentieren, wenn ihr etwas deaktivieren wollt
 #define DEBUG_CONSOLE				// Deaktiviert die Console WIRD EMPFOHLEN ZU DEAKTIVIEREN
-//#define ONLY_WEB					// Aktiviert = Deaktiviert die Inputs an de rFernbedienung
+//#define ONLY_WEB					// Aktiviert = Deaktiviert die Inputs an der Fernbedienung
 
 // ############################################## EEPROM
 #define EEPROM_SIZE 64
@@ -20,3 +20,7 @@ bool newWebInput = false;
 #define DELAY_UPDATE_MENUE 600
 
 #define PORT_WEBSERVER 80
+
+// Muss noch geändert werden, ich habe an einen Wifi Speicher gedacht oder die nutzung vom Wifimanager
+const char* ssid     = "fablab";
+const char* password = "fablabfdm";
