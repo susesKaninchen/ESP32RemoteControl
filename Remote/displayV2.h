@@ -48,7 +48,7 @@ void initTft() {
   tft.init();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
-  tft.setCallback(bgColor); // Switch on color callback for anti-aliased fonts
+  //tft.setCallback(bgColor); // Switch on color callback for anti-aliased fonts
 }
 
 void addRange(byte &i, byte minInt, byte maxInt) {
@@ -72,7 +72,7 @@ void drawAkku(float akkuValue) {
   tft.setTextSize(1);
   uint16_t color;
   if (value > 420) {
-    tft.setTextColor(TFT_GREEN);
+    tft.setTextColor(TFT_GREEN, TFT_BLACK);
     tft.print("+++");
   } else {
     if (value > 400) {
@@ -82,7 +82,7 @@ void drawAkku(float akkuValue) {
     } else {
       color = TFT_RED;
     }
-    tft.setTextColor(color);
+    tft.setTextColor(color, TFT_BLACK);
     tft.print(temp);
     tft.setCursor(12, 4);
     tft.print(value - (temp * 100));
@@ -157,7 +157,7 @@ void drawAdresse(char* addrS, char* addrE) {
   //tft.fillRect(57, 2, 101, 12, TFT_BLACK);
   tft.drawRect(56, 1 , 102, 13, TFT_GREEN);
   tft.setCursor(59, 4);
-  tft.setTextColor(0x666666);
+  tft.setTextColor(0x666666, TFT_BLACK);
   tft.setTextSize(1);
   tft.print("E:");
   tft.print(addrS);
@@ -179,7 +179,7 @@ void drawBlackAndTopLine() {
 
 void drawNoRecive() {
   tft.setCursor(0, 20);
-  tft.setTextColor(0x666666);
+  tft.setTextColor(0x666666, TFT_BLACK);
   tft.setTextSize(1);
   tft.setTextWrap(true);
   tft.println("Empfangen deaktiviert, deshalb keine Daten vom Gerät, aber ich laufe schon:");
@@ -188,7 +188,7 @@ void drawNoRecive() {
   //tft.setTextColor(TFT_BLACK);
   //tft.print(lastTemp);
   tft.setCursor(30, 90);
-  tft.setTextColor(TFT_WHITE);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.print(temp);
   lastTemp = temp;
 }
@@ -196,19 +196,29 @@ void drawNoRecive() {
 void drawRecive() {
   tft.fillRect(0, 20, tft.width(), 32, TFT_BLACK);
   tft.setCursor(0, 20);
-  tft.setTextColor(0x666666);
+  tft.setTextColor(0x666666, TFT_BLACK);
   tft.setTextSize(1);
   tft.setTextWrap(true);
-  tft.print("Letztes Paket erhalten: ");
+  tft.println("Letztes Paket erhalten: ");
   tft.println(recivPackage.timestamp);
   tft.print("Akkustatus des Bots: ");
   tft.println(recivPackage.akku);
   tft.print("Abschaltung der Fernbedienung in : ");
   tft.println((lastAction + configSet.timeout) - millis());
+  tft.print("leftStickX: ");
+  tft.println(stateInput.leftStickX);
+  tft.print("leftStickY: ");
+  tft.println(stateInput.leftStickY);
+  tft.print("rightStickX: ");
+  tft.println(stateInput.rightStickX);
+  tft.print("rightStickY: ");
+  tft.println(stateInput.rightStickY);
+  //tft.print("menueButtonPresses: ");
+  //tft.println(menueButtonPresses);
 }
 
 void drawOption(const char *menueString, uint32_t value) {
-  tft.setTextColor(TFT_WHITE);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.fillScreen(TFT_BLACK);
   tft.setTextWrap(false);
   // Hauptpunkt
@@ -226,7 +236,7 @@ void drawOption(const char *menueString, uint32_t value) {
 }
 
 void drawOption(const char *menueString, const char *valueString) {
-  tft.setTextColor(TFT_WHITE);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.fillScreen(TFT_BLACK);
   tft.setTextWrap(false);
   // Hauptpunkt
@@ -244,7 +254,7 @@ void drawOption(const char *menueString, const char *valueString) {
 }
 
 void drawOption(const char *menueString, const char *valueString, byte marker) {
-  tft.setTextColor(TFT_WHITE);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.fillScreen(TFT_BLACK);
   tft.setTextWrap(false);
   // Hauptpunkt
@@ -264,7 +274,7 @@ void drawOption(const char *menueString, const char *valueString, byte marker) {
 }
 
 void menueBool(bool &value, const char *text) {
-  tft.setTextColor(TFT_WHITE);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
   bool hasChangedTFT = true;
   bool tempValue = value;
   drawOption(text, (tempValue ? boolStrings[0] : boolStrings[1]));
@@ -321,7 +331,7 @@ void menueBool(bool &value, const char *text) {
 }
 
 void menueString(char *value, const char *text) {
-  tft.setTextColor(TFT_WHITE);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
   bool hasChangedTFT = true;
   byte positionCounter = 0;
   drawOption(text, value);
@@ -397,7 +407,7 @@ void menueString(char *value, const char *text) {
 }
 
 void menueLong(uint32_t &value, const char *text) {
-  tft.setTextColor(TFT_WHITE);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
   bool hasChangedTFT = true;
   uint32_t tempValue = value;
   drawOption(text, tempValue);
@@ -467,7 +477,7 @@ void menueLong(uint32_t &value, const char *text) {
 }
 
 void menueArray(byte &value, const char *text, const char *values[], int len) {
-  tft.setTextColor(TFT_WHITE);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
   bool hasChangedTFT = true;
   byte tempValue = value;
   drawOption(text, values[tempValue]);
@@ -553,7 +563,7 @@ void drawMenueV2(const char *text[], int len, uint16_t color, int active, uint16
   // 10 ist die halbe Schriftgröße von der mitte, 5 ist der Abstand zum nächten Text und 12 ist die schriftgröße 2
   tft.setCursor(4, tft.height() / 2 - (10 + 5 + 12));
   tft.setTextSize(1);
-  tft.setTextColor(color);
+  tft.setTextColor(color, TFT_BLACK);
   if (counterPoints >= len) {
     return;
   }
@@ -580,7 +590,7 @@ void drawMenueV2(const char *text[], int len, uint16_t color, int active, uint16
   // 10 ist die halbe Schriftgröße von der mitte, 5 ist der Abstand zum nächten Text und 12 ist die schriftgröße 2 un dann mit 1
   tft.setCursor(4, tft.height() / 2 - (10 + 5 + 12 + 5 + 10));
   tft.setTextSize(1);
-  tft.setTextColor(color);
+  tft.setTextColor(color, TFT_BLACK);
   if (counterPoints >= len) {
     return;
   }

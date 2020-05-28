@@ -23,7 +23,7 @@ Input_State;
 typedef struct
 {
   unsigned long timestamp = 0;
-  char akku = 100;
+  char akku = 0;
   int validate = validateNumber;
   // Alles was ihr so empfangen wollt
 }
@@ -37,8 +37,8 @@ typedef struct
   byte rfStaerke = 1;
   bool webserverEnabled = true;
   bool btEnabled = false;
-  bool recive = false;
+  bool recive = true;
   uint32_t timeout = 1 * 60 * 1000;
-  int validate = 14347;
+  int validate = 34347;
 }
 Config;

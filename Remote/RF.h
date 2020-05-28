@@ -27,6 +27,11 @@ void RFsend() {
 void RFrecive() {
   if (radio.available()) {
     radio.read( &recivPackage, sizeof(Reciv_Package) );
+    #ifdef DEBUG_CONSOLE
+    Serial.println();
+    Serial.println(recivPackage.akku);
+    Serial.println();
+    #endif
     if (recivPackage.validate == validateNumber) {
       missingPackages = 0;
     } else {
@@ -107,6 +112,7 @@ void RFinit() {
   Serial.println();
 #endif
   radio.begin();                       // Initialisirung des Senders
+  Serial.println(radio.isChipConnected());
   RFchangeLevel();
   RFchangeAddresseSend();
   if (configSet.recive) {

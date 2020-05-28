@@ -22,5 +22,5 @@ bool newWebInput = false;
 #define PORT_WEBSERVER 80
 
 // Muss noch geändert werden, ich habe an einen Wifi Speicher gedacht oder die nutzung vom Wifimanager
-const char* ssid     = "fablab";
-const char* password = "fablabfdm";
+const char* ssid     = "Seewald";
+const char* password = "nicoleundgina";

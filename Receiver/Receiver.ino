@@ -29,13 +29,13 @@ Input_State;
 typedef struct
 {
   unsigned long timestamp = 0;
-  char akku = 100;
+  char akku = 190;
   int validate = validateNumber;
   // Alles was ihr so empfangen wollt
 }
 Send_Package;
 
-#define RADIO_CE 3
+#define RADIO_CE 5
 #define RADIO_CS 4
 RF24 radio(RADIO_CE, RADIO_CS);
 Input_State recivePackage;
@@ -45,9 +45,9 @@ void setup() {
 #ifdef DEBUG_CONSOLE
   Serial.begin(115200);
   Serial.println("Starte Programm und deffiniere Pins");
-  Serial.println();
 #endif
   radio.begin();                       // Initialisirung des Senders
+  Serial.println(radio.isChipConnected());
   radio.setPALevel(RF24_PA_MIN);       // Sendestärke auf LOW setzen, umw eniger störungen in Räumen zu bekommen
   radio.stopListening();
   byte adressTemp[6];
@@ -71,6 +71,7 @@ void loop() {
     radio.read( &recivePackage, sizeof(Input_State) );
     if (recivePackage.validate == validateNumber) {
       missingPackages = 0;
+      Serial.println("empfangen");
     } else {
       missingPackages++;
     }

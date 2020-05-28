@@ -31,21 +31,21 @@ bool reloadTFT = true;
 // ############################################## Menue/Display
 
 void menueBT() {
-  menueBool(configSet.btEnabled, menueStrings[4]);
+  menueBool(configSet.btEnabled, menueStrings[5]);
 }
 void menueTimeout() {
-  menueLong(configSet.timeout, menueStrings[5]);
+  menueLong(configSet.timeout, menueStrings[6]);
 }
 
 void menueWebServer() {
-  menueBool(configSet.webserverEnabled, menueStrings[3]);
+  menueBool(configSet.webserverEnabled, menueStrings[4]);
   if (configSet.webserverEnabled && Task2 == NULL) {
     xTaskCreatePinnedToCore(loopCPU2, "loopCPU2", 10000, NULL, 5, &Task2, 1);
   }
 }
 
 void menueRFpower() {
-  menueArray(configSet.rfStaerke, menueStrings[2], powerLvlStrings, 4);
+  menueArray(configSet.rfStaerke, menueStrings[3], powerLvlStrings, 4);
   RFchangeLevel();
 }
 
@@ -55,12 +55,12 @@ void menueRfSendAdresse() {
 }
 
 void menueRfReciveAdresse() {
-  menueString(configSet.addrRfRecive, menueStrings[0]);
+  menueString(configSet.addrRfRecive, menueStrings[1]);
   RFchangeAddresseReciv();
 }
 
 void menueRFrecive() {
-  menueBool(configSet.recive, menueStrings[1]);
+  menueBool(configSet.recive, menueStrings[2]);
   //RFchangeRecive();
 }
 
