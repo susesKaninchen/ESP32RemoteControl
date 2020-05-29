@@ -12,7 +12,7 @@ int missingPackages = 0;
 // ############################################## Antenne
 
 void RFsend() {
-#ifdef DEBUG_CONSOLE
+#ifdef DEBUG_CONSOLE 
   Serial.println();
   Serial.println("Sende Paket->");
   Serial.println();
@@ -28,9 +28,10 @@ void RFrecive() {
   if (radio.available()) {
     radio.read( &recivPackage, sizeof(Reciv_Package) );
     #ifdef DEBUG_CONSOLE
-    Serial.println();
-    Serial.println(recivPackage.akku);
-    Serial.println();
+    Serial.println("Paket empfangen: ");
+    Serial.println(recivPackage.timestamp);
+    Serial.println((int)recivPackage.akku);
+    Serial.println(recivPackage.validate);
     #endif
     if (recivPackage.validate == validateNumber) {
       missingPackages = 0;
@@ -112,7 +113,10 @@ void RFinit() {
   Serial.println();
 #endif
   radio.begin();                       // Initialisirung des Senders
+  #ifdef DEBUG_CONSOLE
+  Serial.print("Antenne angeschlossen: ");
   Serial.println(radio.isChipConnected());
+  #endif
   RFchangeLevel();
   RFchangeAddresseSend();
   if (configSet.recive) {

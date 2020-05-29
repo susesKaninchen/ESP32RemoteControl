@@ -96,28 +96,31 @@ void loopCPU1( void * parameter )
     Serial.println();
 #endif
     updateInput();
-    #ifdef DEBUG_CONSOLE
+#ifdef DEBUG_CONSOLE
     Serial.println("Loop: Input");
-    #endif
+#endif
     checkTimeout();
-    #ifdef DEBUG_CONSOLE
+#ifdef DEBUG_CONSOLE
     Serial.println("Loop: Timeout");
-    #endif
+#endif
     if (menueButtonPresses) {
       handleMenue();
       reloadTFT = true;
     } else {
       RFsend();
     }
-    #ifdef DEBUG_CONSOLE
+#ifdef DEBUG_CONSOLE
     Serial.println("Loop: Bildschirm");
-    #endif
+#endif
     // Hauptbildschirm Malen
     if (reloadTFT) {
       drawBlackAndTopLine();
       drawWifi(configSet.webserverEnabled);
       drawBT(configSet.btEnabled);
       drawAdresse(configSet.addrRfSend, configSet.addrRfRecive);
+      if (!configSet.recive) {
+        drawNoRecive();
+      }
       reloadTFT = false;
     }
     if (readAkku()) {
@@ -125,9 +128,7 @@ void loopCPU1( void * parameter )
     }
     delay(DELAY_LOOP);        // Delay to wait for packages;
     // Deine Display (15:x)
-    if (!configSet.recive) {
-      drawNoRecive();
-    } else {
+    if (configSet.recive) {
       RFrecive();
       drawRecive();
     }
@@ -148,6 +149,9 @@ void loopCPU2( void * parameter )
 #ifdef DEBUG_CONSOLE
     Serial.println(".");
 #endif
+    if (!configSet.webserverEnabled) {
+      vTaskDelete(NULL);//  Kill this Task
+    }
   }
   wlanVerbunden = true;
   reloadTFT = true;

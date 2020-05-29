@@ -6,8 +6,8 @@
 // Structs and min Values
 int missingPackages = 0;
 int validateNumber = 56985;
-char addrRfSend[6] = "Adres";
-char addrRfRecive[6] = "adres";
+char addrRfSend[6] = "adres";
+char addrRfRecive[6] = "Adres";
 typedef struct
 {
   bool leftStick = 0;
@@ -31,7 +31,7 @@ typedef struct
   unsigned long timestamp = 0;
   char akku = 190;
   int validate = validateNumber;
-  // Alles was ihr so empfangen wollt
+  // Alles was ihr so empfangen wollt, muss aber auch bei Fernbedienung angepasst werden
 }
 Send_Package;
 
@@ -47,7 +47,9 @@ void setup() {
   Serial.println("Starte Programm und deffiniere Pins");
 #endif
   radio.begin();                       // Initialisirung des Senders
+#ifdef DEBUG_CONSOLE
   Serial.println(radio.isChipConnected());
+#endif
   radio.setPALevel(RF24_PA_MIN);       // Sendestärke auf LOW setzen, umw eniger störungen in Räumen zu bekommen
   radio.stopListening();
   byte adressTemp[6];
@@ -71,13 +73,21 @@ void loop() {
     radio.read( &recivePackage, sizeof(Input_State) );
     if (recivePackage.validate == validateNumber) {
       missingPackages = 0;
+#ifdef DEBUG_CONSOLE
       Serial.println("empfangen");
+      Serial.println("Paket empfangen: ");
+      Serial.println(recivePackage.leftStickY);
+      Serial.println(recivePackage.leftStickX);
+      Serial.println(recivePackage.validate);
+      Serial.println("...");
+#endif
+      // Senden Back Akku
+      radio.stopListening();
+      sendPackage.timestamp++;
+      radio.write(&sendPackage, sizeof(Send_Package));
+      radio.startListening();
     } else {
       missingPackages++;
     }
-    // Senden Back Akku
-    radio.stopListening();
-    radio.write(&sendPackage, sizeof(Send_Package));
-    radio.startListening();
   }
 }

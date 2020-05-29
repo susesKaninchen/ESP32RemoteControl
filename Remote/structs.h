@@ -1,6 +1,6 @@
 // ############################################## Inputs
 
-int validateNumber = 56985;
+int validateNumber = 56985; // Diese nummer muss mit dem Empfänger übereinstimmen!!
 
 typedef struct
 {
@@ -39,6 +39,6 @@ typedef struct
   bool btEnabled = false;
   bool recive = true;
   uint32_t timeout = 1 * 60 * 1000;
-  int validate = 34347;
+  int validate = 34647;
 }
 Config;

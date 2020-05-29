@@ -202,19 +202,43 @@ void drawRecive() {
   tft.println("Letztes Paket erhalten: ");
   tft.println(recivPackage.timestamp);
   tft.print("Akkustatus des Bots: ");
-  tft.println(recivPackage.akku);
+  tft.println((int)recivPackage.akku);
   tft.print("Abschaltung der Fernbedienung in : ");
   tft.println((lastAction + configSet.timeout) - millis());
   tft.print("leftStickX: ");
-  tft.println(stateInput.leftStickX);
+  tft.print(stateInput.leftStickX);
+  tft.println("..");
   tft.print("leftStickY: ");
-  tft.println(stateInput.leftStickY);
+  tft.print(stateInput.leftStickY);
+  tft.println("..");
   tft.print("rightStickX: ");
-  tft.println(stateInput.rightStickX);
+  tft.print(stateInput.rightStickX);
+  tft.println("..");
   tft.print("rightStickY: ");
-  tft.println(stateInput.rightStickY);
+  tft.print(stateInput.rightStickY);
+  tft.println("..");
   //tft.print("menueButtonPresses: ");
   //tft.println(menueButtonPresses);
+}
+
+void drawOption(const char *menueString, uint32_t value, uint16_t color) {
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextWrap(false);
+  // Hauptpunkt
+  tft.setCursor(4, tft.height() / 2 - 20);
+  tft.setTextSize(2);
+  tft.println(menueString);
+  tft.print(" ");
+  tft.setTextColor(color, TFT_BLACK);
+  tft.println(value);
+  
+#ifdef DEBUG_CONSOLE
+  Serial.println("Update TFT: ");
+  Serial.println(menueString);
+  Serial.println(value);
+  Serial.println();
+#endif
 }
 
 void drawOption(const char *menueString, uint32_t value) {
@@ -226,7 +250,13 @@ void drawOption(const char *menueString, uint32_t value) {
   tft.setTextSize(2);
   tft.println(menueString);
   tft.print(" ");
+  if (value == 0){
+    tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  }else if (value == 1) {
+    tft.setTextColor(TFT_RED, TFT_BLACK);
+  }
   tft.println(value);
+  
 #ifdef DEBUG_CONSOLE
   Serial.println("Update TFT: ");
   Serial.println(menueString);
