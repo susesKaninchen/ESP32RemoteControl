@@ -2,7 +2,7 @@ extern Config configSet;
 extern Input_State stateInput;
 
 // ############################################## Shiftregister
-const PROGMEM byte dataArray[] = { 0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001};
+const PROGMEM byte dataArray[] = { 1, 2, 4, 8, 16, 32, 64, 128, 0};
 byte lastShiftState = 0;
 
 // ############################################## Power MOSFET
@@ -61,7 +61,7 @@ void checkTimeout() {
 // ############################################## Shiftregister
 byte readShiftregister() {
   byte tempState = 0;
-  for (int j = 0; j < 8; j++) {
+  for (int j = 0; j < 9; j++) {
     //ground latchPin and hold low for as long as you are transmitting
     digitalWrite(PIN_SR_ST_CP, LOW);
     //move 'em out
@@ -149,10 +149,14 @@ void updateInput() {
 
 void initPins() {
   // Pins
+  pinMode(PIN_SR_ST_CP, OUTPUT);
+  pinMode(PIN_SR_SH_CP, OUTPUT);
+  pinMode(PIN_SR_DS, OUTPUT);
   pinMode(PIN_MOSFET, OUTPUT);
   pinMode(PIN_SR_INPUT, INPUT);
   enablePower(true);
   // Analog
-  analogSetSamples(5);
+  analogSetSamples(1);
+  analogSetCycles(50);
   analogReadResolution(10);
 }

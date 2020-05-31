@@ -7,9 +7,9 @@
    ESP32      TFT
    3V3        VCC
    GND        GND
-   D5/CS      CS
+   D4/CS      CS
    D16        RESET
-   D17         A0
+   D17        A0
    D23/MOSI   SDA/MOSI
    D18/CLK    SCK/CLK
    3V3        LED

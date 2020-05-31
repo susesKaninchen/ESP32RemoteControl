@@ -115,6 +115,7 @@ void loopCPU1( void * parameter )
     // Hauptbildschirm Malen
     if (reloadTFT) {
       drawBlackAndTopLine();
+      drawAkku(batteriespannung);
       drawWifi(configSet.webserverEnabled);
       drawBT(configSet.btEnabled);
       drawAdresse(configSet.addrRfSend, configSet.addrRfRecive);
