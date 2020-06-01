@@ -38,8 +38,9 @@ void menueTimeout() {
 }
 
 void menueWebServer() {
+  bool tempBool = configSet.webserverEnabled;
   menueBool(configSet.webserverEnabled, menueStrings[4]);
-  if (configSet.webserverEnabled && Task2 == NULL) {
+  if (configSet.webserverEnabled && tempBool != configSet.webserverEnabled) {
     xTaskCreatePinnedToCore(loopCPU2, "loopCPU2", 10000, NULL, 5, &Task2, 1);
   }
 }
@@ -138,10 +139,15 @@ void loopCPU1( void * parameter )
 
 void loopCPU2( void * parameter )
 {
+  wlanVerbunden = false;
   if (!configSet.webserverEnabled) {
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
+    btStop();
     vTaskDelete(NULL);//  Kill this Task
   }
-
+  WiFi.mode(WIFI_MODE_STA); // calls esp_wifi_set_mode(WIFI_MODE_STA); and esp_wifi_start();
+  WiFi.enableSTA(true);
   // Http Zeug
   WiFiServer server(PORT_WEBSERVER);
   WiFi.begin(ssid, password);
@@ -151,6 +157,11 @@ void loopCPU2( void * parameter )
     Serial.println(".");
 #endif
     if (!configSet.webserverEnabled) {
+      server.stop();
+      server = NULL;
+      WiFi.disconnect(true);
+      WiFi.mode(WIFI_OFF);
+      btStop();
       vTaskDelete(NULL);//  Kill this Task
     }
   }
@@ -180,8 +191,17 @@ void loopCPU2( void * parameter )
 #endif
   String header;
   for (;;) {
+#ifdef DEBUG_CONSOLE
+    Serial.print("WiFi Status: ");
+    Serial.println(WiFi.status());
+#endif
     //handleBLE();
     if (!configSet.webserverEnabled) {
+      server.stop();
+      server = NULL;
+      WiFi.disconnect(true);
+      WiFi.mode(WIFI_OFF);
+      btStop();
       vTaskDelete(NULL);//  Kill this Task
     }
     ArduinoOTA.handle();
@@ -252,8 +272,8 @@ void loopCPU2( void * parameter )
               client.println("<h2>Config</h2>");
               client.print("addrRfSend: ");
               client.println((int)configSet.addrRfSend);
-              client.print("addrRfSend: ");
-              client.println((int)configSet.addrRfSend);
+              client.print("<br>addrRfRecive: ");
+              client.println((int)configSet.addrRfRecive);
               client.print("<br>rfStaerke: ");
               client.println(configSet.rfStaerke);
               client.print("<br>webserverEnabled: ");

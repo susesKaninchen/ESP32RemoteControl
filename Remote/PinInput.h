@@ -81,6 +81,7 @@ byte readShiftregister() {
   Serial.println((lastShiftState != tempState));
   Serial.println();
 #endif
+  delay(1);
   return tempState;
 }
 

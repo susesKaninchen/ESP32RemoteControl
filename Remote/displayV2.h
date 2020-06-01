@@ -16,6 +16,14 @@ extern Reciv_Package recivPackage;
 extern long lastAction;
 // ############################################## Menue/Display
 TFT_eSPI tft = TFT_eSPI();
+// 'icons8-small-axe-20', 20x20px
+const unsigned char myBitmap [] PROGMEM = {
+  0xff, 0xff, 0xf0, 0xff, 0xff, 0xf0, 0xfc, 0x7f, 0xf0, 0xfb, 0x91, 0xf0, 0xfb, 0xf1, 0xf0, 0xfb, 
+  0xf5, 0xf0, 0xfb, 0xfd, 0xf0, 0xfb, 0xe1, 0xf0, 0xfb, 0xf5, 0xf0, 0xfc, 0x75, 0xf0, 0xff, 0xf5, 
+  0xf0, 0xff, 0xf5, 0xf0, 0xff, 0xf5, 0xf0, 0xff, 0xf5, 0xf0, 0xff, 0xf5, 0xf0, 0xff, 0xf5, 0xf0, 
+  0xff, 0xf5, 0xf0, 0xff, 0xf1, 0xf0, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xf0
+};
+
 const PROGMEM char *menueStrings[] = {"RFAdresseS", "RFAdresseE", "RF recive", "RF Send Lvl", "Web Server", "Bluetouch", "Timeout"};
 const PROGMEM char *boolStrings[] = { "Aktiviert", "Deaktiviert"};
 const PROGMEM char *powerLvlStrings[] = { "MIN", "LOW", "HIGH", "MAX"};
@@ -157,7 +165,7 @@ void drawAdresse(char* addrS, char* addrE) {
   //tft.fillRect(57, 2, 101, 12, TFT_BLACK);
   tft.drawRect(56, 1 , 102, 13, TFT_GREEN);
   tft.setCursor(59, 4);
-  tft.setTextColor(0x666666, TFT_BLACK);
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.setTextSize(1);
   tft.print("E:");
   tft.print(addrS);
@@ -179,7 +187,7 @@ void drawBlackAndTopLine() {
 
 void drawNoRecive() {
   tft.setCursor(0, 20);
-  tft.setTextColor(0x666666, TFT_BLACK);
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.setTextSize(1);
   tft.setTextWrap(true);
   tft.println("Empfangen deaktiviert, deshalb keine Daten vom Gerät, aber ich laufe schon:");
@@ -196,7 +204,7 @@ void drawNoRecive() {
 void drawRecive() {
   tft.fillRect(0, 20, tft.width(), 32, TFT_BLACK);
   tft.setCursor(0, 20);
-  tft.setTextColor(0x666666, TFT_BLACK);
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.setTextSize(1);
   tft.setTextWrap(true);
   tft.println("Letztes Paket erhalten: ");
@@ -217,26 +225,28 @@ void drawRecive() {
   tft.print("rightStickY: ");
   tft.print(stateInput.rightStickY);
   tft.println("..");
+  tft.drawBitmap( 0, 100, myBitmap, 20, 20, TFT_WHITE);
   //tft.print("menueButtonPresses: ");
   //tft.println(menueButtonPresses);
 }
 
-void drawOption(const char *menueString, uint32_t value, uint16_t color) {
+void drawOptionColor(const char *menueString, uint32_t value, uint16_t color) {
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.fillScreen(TFT_BLACK);
   tft.setTextWrap(false);
   // Hauptpunkt
-  tft.setCursor(4, tft.height() / 2 - 20);
+  tft.setCursor(4, tft.height() / 2 - 25);
   tft.setTextSize(2);
   tft.println(menueString);
   tft.print(" ");
   tft.setTextColor(color, TFT_BLACK);
   tft.println(value);
-  
+
 #ifdef DEBUG_CONSOLE
   Serial.println("Update TFT: ");
   Serial.println(menueString);
   Serial.println(value);
+  Serial.println(color);
   Serial.println();
 #endif
 }
@@ -246,17 +256,17 @@ void drawOption(const char *menueString, uint32_t value) {
   tft.fillScreen(TFT_BLACK);
   tft.setTextWrap(false);
   // Hauptpunkt
-  tft.setCursor(4, tft.height() / 2 - 20);
+  tft.setCursor(4, tft.height() / 2 - 25);
   tft.setTextSize(2);
   tft.println(menueString);
   tft.print(" ");
-  if (value == 0){
+  if (value == 0) {
     tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  }else if (value == 1) {
+  } else if (value == 1) {
     tft.setTextColor(TFT_RED, TFT_BLACK);
   }
   tft.println(value);
-  
+
 #ifdef DEBUG_CONSOLE
   Serial.println("Update TFT: ");
   Serial.println(menueString);
@@ -270,10 +280,29 @@ void drawOption(const char *menueString, const char *valueString) {
   tft.fillScreen(TFT_BLACK);
   tft.setTextWrap(false);
   // Hauptpunkt
-  tft.setCursor(4, tft.height() / 2 - 20);
+  tft.setCursor(4, tft.height() / 2 - 25);
   tft.setTextSize(2);
   tft.println(menueString);
   tft.print(" ");
+  tft.println(valueString);
+#ifdef DEBUG_CONSOLE
+  Serial.println("Update TFT: ");
+  Serial.println(menueString);
+  Serial.println(valueString);
+  Serial.println();
+#endif
+}
+
+void drawOption(const char *menueString, const char *valueString, uint16_t color) {
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextWrap(false);
+  // Hauptpunkt
+  tft.setCursor(4, tft.height() / 2 - 25);
+  tft.setTextSize(2);
+  tft.println(menueString);
+  tft.print(" ");
+  tft.setTextColor(color, TFT_BLACK);
   tft.println(valueString);
 #ifdef DEBUG_CONSOLE
   Serial.println("Update TFT: ");
@@ -288,7 +317,7 @@ void drawOption(const char *menueString, const char *valueString, byte marker) {
   tft.fillScreen(TFT_BLACK);
   tft.setTextWrap(false);
   // Hauptpunkt
-  tft.setCursor(4, tft.height() / 2 - 20);
+  tft.setCursor(4, tft.height() / 2 - 25);
   tft.setTextSize(2);
   tft.println(menueString);
   tft.print(" ");
@@ -299,6 +328,7 @@ void drawOption(const char *menueString, const char *valueString, byte marker) {
   Serial.println("Update TFT: ");
   Serial.println(menueString);
   Serial.println(valueString);
+  Serial.println(marker);
   Serial.println();
 #endif
 }
@@ -307,7 +337,7 @@ void menueBool(bool &value, const char *text) {
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   bool hasChangedTFT = true;
   bool tempValue = value;
-  drawOption(text, (tempValue ? boolStrings[0] : boolStrings[1]));
+  drawOption(text, (tempValue ? boolStrings[0] : boolStrings[1]), (uint16_t) (tempValue ? (uint16_t) TFT_GREEN : (uint16_t) TFT_RED));
 #ifdef DEBUG_CONSOLE
   Serial.print("Menue einstellen: ");
   Serial.print(*text);
@@ -316,7 +346,7 @@ void menueBool(bool &value, const char *text) {
   delay(DELAY_ENTER_MENUE);
   while (true) {
     if (hasChangedTFT) {
-      drawOption(text, (tempValue ? boolStrings[0] : boolStrings[1]));
+      drawOption(text, (tempValue ? boolStrings[0] : boolStrings[1]), (uint16_t) (tempValue ? (uint16_t) TFT_GREEN : (uint16_t) TFT_RED));
       hasChangedTFT = false;
 #ifdef DEBUG_CONSOLE
       Serial.println("TFT Update");
@@ -331,6 +361,7 @@ void menueBool(bool &value, const char *text) {
       Serial.println("Stick nach rechts mache nichts");
       Serial.println();
 #endif
+      delay(1);
       // Nichts
       continue;
     }
@@ -389,6 +420,8 @@ void menueString(char *value, const char *text) {
       Serial.println("Position ++");
       Serial.println();
 #endif
+      delay(DELAY_UPDATE_MENUE);
+      hasChangedTFT = true;
       continue;
     }
     // Analog nach Links = Zurück
@@ -415,7 +448,7 @@ void menueString(char *value, const char *text) {
       Serial.print(value);
       Serial.println();
 #endif
-      delay(DELAY_UPDATE_MENUE);
+      delay(DELAY_UPDATE_MENUE_VALUE);
       continue;
     }
     // Analog nach Unten
@@ -430,7 +463,7 @@ void menueString(char *value, const char *text) {
       Serial.print(value);
       Serial.println();
 #endif
-      delay(DELAY_UPDATE_MENUE);
+      delay(DELAY_UPDATE_MENUE_VALUE);
       continue;
     }
   }
@@ -464,7 +497,9 @@ void menueLong(uint32_t &value, const char *text) {
       Serial.println("Stick nach rechts addire Value");
       Serial.println();
 #endif
+      hasChangedTFT = true;
       tempValue++;
+      delay(DELAY_UPDATE_MENUE);
       continue;
     }
     // Analog nach Links = Zurück
@@ -488,7 +523,7 @@ void menueLong(uint32_t &value, const char *text) {
       Serial.print(tempValue);
       Serial.println();
 #endif
-      delay(DELAY_UPDATE_MENUE);
+      delay(DELAY_UPDATE_MENUE_VALUE);
       continue;
     }
     // Analog nach Unten
@@ -500,7 +535,7 @@ void menueLong(uint32_t &value, const char *text) {
       Serial.print(tempValue);
       Serial.println();
 #endif
-      delay(DELAY_UPDATE_MENUE);
+      delay(DELAY_UPDATE_MENUE_VALUE);
       continue;
     }
   }
@@ -535,6 +570,8 @@ void menueArray(byte &value, const char *text, const char *values[], int len) {
       Serial.println();
 #endif
       addRange(tempValue, 0, len);
+      hasChangedTFT = true;
+      delay(DELAY_UPDATE_MENUE);
       continue;
     }
     // Analog nach Links = Zurück
@@ -558,7 +595,7 @@ void menueArray(byte &value, const char *text, const char *values[], int len) {
       Serial.print(values[tempValue]);
       Serial.println();
 #endif
-      delay(DELAY_UPDATE_MENUE);
+      delay(DELAY_UPDATE_MENUE_VALUE);
       continue;
     }
     // Analog nach Unten
@@ -570,7 +607,7 @@ void menueArray(byte &value, const char *text, const char *values[], int len) {
       Serial.print(values[tempValue]);
       Serial.println();
 #endif
-      delay(DELAY_UPDATE_MENUE);
+      delay(DELAY_UPDATE_MENUE_VALUE);
       continue;
     }
   }

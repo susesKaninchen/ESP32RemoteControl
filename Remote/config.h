@@ -18,6 +18,7 @@ bool newWebInput = false;
 #define DELAY_WIFI_CONNECTION 100 //ms
 #define DELAY_ENTER_MENUE 1000
 #define DELAY_UPDATE_MENUE 600
+#define DELAY_UPDATE_MENUE_VALUE 10
 
 #define PORT_WEBSERVER 80
 
