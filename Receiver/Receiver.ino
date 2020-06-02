@@ -6,8 +6,8 @@
 // Structs and min Values
 int missingPackages = 0;
 int validateNumber = 56985;
-char addrRfSend[6] = "adres";
-char addrRfRecive[6] = "Adres";
+char addrRfSend[6] = "00001";
+char addrRfRecive[6] = "00000";
 typedef struct
 {
   bool leftStick = 0;
@@ -74,12 +74,27 @@ void loop() {
     if (recivePackage.validate == validateNumber) {
       missingPackages = 0;
 #ifdef DEBUG_CONSOLE
+/*
       Serial.println("empfangen");
       Serial.println("Paket empfangen: ");
       Serial.println(recivePackage.leftStickY);
       Serial.println(recivePackage.leftStickX);
       Serial.println(recivePackage.validate);
-      Serial.println("...");
+      Serial.println("...");*/
+      Serial.print("leftStick: ");
+      Serial.println(recivePackage.leftStick);
+      Serial.print("rightStick: ");
+      Serial.println(recivePackage.rightStick);
+      Serial.print("left1: ");
+      Serial.println(recivePackage.left1);
+      Serial.print("left2: ");
+      Serial.println(recivePackage.left2);
+      Serial.print("right1: ");
+      Serial.println(recivePackage.right1);
+      Serial.print("right2: ");
+      Serial.println(recivePackage.right2);
+      Serial.print("switchTop: ");
+      Serial.println(recivePackage.switchTop);
 #endif
       // Senden Back Akku
       radio.stopListening();

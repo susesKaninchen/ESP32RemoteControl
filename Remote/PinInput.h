@@ -46,14 +46,14 @@ void checkTimeout() {
   Serial.println("Teste ob Timeout (Abschalten wegen inaktivität): ");
   Serial.print(lastAction);
   Serial.print("+");
-  Serial.print(configSet.timeout);
+  Serial.print(configSet.timeout * 1000);
   Serial.print("<");
   Serial.print(millis());
   Serial.print(" -> ");
-  Serial.println((lastAction + configSet.timeout < millis()));
+  Serial.println((lastAction + (configSet.timeout*1000) < millis()));
   Serial.println();
 #endif
-  if (lastAction + configSet.timeout < millis()) {
+  if (lastAction + (configSet.timeout*1000) < millis()) {
     enablePower(false);
   }
 }
@@ -69,6 +69,7 @@ byte readShiftregister() {
     //return the latch pin high to signal chip that it
     //no longer needs to listen for information
     digitalWrite(PIN_SR_ST_CP, HIGH);
+    delayMicroseconds(1);
     tempState += (digitalRead(PIN_SR_INPUT) * dataArray[j]);
   }
   if (lastShiftState != tempState) {
@@ -81,7 +82,6 @@ byte readShiftregister() {
   Serial.println((lastShiftState != tempState));
   Serial.println();
 #endif
-  delay(1);
   return tempState;
 }
 
@@ -93,33 +93,41 @@ void updateInput() {
     newWebInput = false;
   } else {
     byte digitalInputs = readShiftregister();
-    stateInput.leftStick = (digitalInputs & dataArray[0] == dataArray[0]);
-    stateInput.rightStick = (digitalInputs & dataArray[1] == dataArray[1]);
-    stateInput.menueButton = (digitalInputs & dataArray[2] == dataArray[2]);
-    stateInput.left1 = (digitalInputs & dataArray[3] == dataArray[3]);
-    stateInput.left2 = (digitalInputs & dataArray[4] == dataArray[4]);
-    stateInput.right1 = (digitalInputs & dataArray[5] == dataArray[5]);
-    stateInput.right2 = (digitalInputs & dataArray[6] == dataArray[6]);
-    stateInput.switchTop = (digitalInputs & dataArray[7] == dataArray[7]);
+    stateInput.leftStick = ((digitalInputs & dataArray[7]) == dataArray[0]);
+    stateInput.rightStick = ((digitalInputs & dataArray[6]) == dataArray[1]);
+    stateInput.menueButton = ((digitalInputs & dataArray[5]) == dataArray[2]);
+    stateInput.left1 = ((digitalInputs & dataArray[4]) == dataArray[3]);
+    stateInput.left2 = ((digitalInputs & dataArray[3]) == dataArray[4]);
+    stateInput.right1 = ((digitalInputs & dataArray[2]) == dataArray[5]);
+    stateInput.right2 = ((digitalInputs & dataArray[1]) == dataArray[6]);
+    stateInput.switchTop = ((digitalInputs & dataArray[0]) == dataArray[7]);
     int tempAnalog = analogRead(PIN_STICK_LX);
     if (tempAnalog != stateInput.leftStickX) {
+      if (abs(tempAnalog - (int) stateInput.leftStickX) > MIN_ANALOG_DIFF ) {
+        lastAction = millis();
+      }
       stateInput.leftStickX = tempAnalog;
-      lastAction = millis();
     }
     tempAnalog = analogRead(PIN_STICK_LY);
     if (tempAnalog != stateInput.leftStickY) {
+      if (abs(tempAnalog - (int) stateInput.leftStickY) > MIN_ANALOG_DIFF ) {
+        lastAction = millis();
+      }
       stateInput.leftStickY = tempAnalog;
-      lastAction = millis();
     }
     tempAnalog = analogRead(PIN_STICK_RX);
     if (tempAnalog != stateInput.rightStickX) {
+      if (abs(tempAnalog - (int) stateInput.rightStickX) > MIN_ANALOG_DIFF ) {
+        lastAction = millis();
+      }
       stateInput.rightStickX = tempAnalog;
-      lastAction = millis();
     }
     tempAnalog = analogRead(PIN_STICK_RY);
     if (tempAnalog != stateInput.rightStickY) {
+      if (abs(tempAnalog - (int) stateInput.rightStickY) > MIN_ANALOG_DIFF ) {
+        lastAction = millis();
+      }
       stateInput.rightStickY = tempAnalog;
-      lastAction = millis();
     }
   }
 #ifdef DEBUG_CONSOLE
@@ -157,7 +165,7 @@ void initPins() {
   pinMode(PIN_SR_INPUT, INPUT);
   enablePower(true);
   // Analog
-  analogSetSamples(1);
-  analogSetCycles(50);
+  //analogSetSamples(1);
+  //analogSetCycles(50);
   analogReadResolution(10);
 }

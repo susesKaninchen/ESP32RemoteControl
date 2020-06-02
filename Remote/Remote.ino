@@ -34,7 +34,7 @@ void menueBT() {
   menueBool(configSet.btEnabled, menueStrings[5]);
 }
 void menueTimeout() {
-  menueLong(configSet.timeout, menueStrings[6]);
+  menueInt(configSet.timeout, menueStrings[6]);
 }
 
 void menueWebServer() {

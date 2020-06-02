@@ -1,5 +1,5 @@
 // Einfach auskommentieren, wenn ihr etwas deaktivieren wollt
-#define DEBUG_CONSOLE				// Deaktiviert die Console WIRD EMPFOHLEN ZU DEAKTIVIEREN
+//#define DEBUG_CONSOLE				// Deaktiviert die Console WIRD EMPFOHLEN ZU DEAKTIVIEREN
 //#define ONLY_WEB					// Aktiviert = Deaktiviert die Inputs an der Fernbedienung
 
 // ############################################## EEPROM
@@ -13,12 +13,14 @@ bool onlyOnline = false;
 #endif
 bool newWebInput = false;
 
-#define DELAY_LOOP 30 //ms
-#define DELAY_TASK 500 //ms
-#define DELAY_WIFI_CONNECTION 100 //ms
-#define DELAY_ENTER_MENUE 1000
-#define DELAY_UPDATE_MENUE 600
-#define DELAY_UPDATE_MENUE_VALUE 10
+#define MIN_ANALOG_DIFF 50
+
+#define DELAY_LOOP 50 //ms
+#define DELAY_TASK 1000 //ms
+#define DELAY_WIFI_CONNECTION 200 //ms
+#define DELAY_ENTER_MENUE 500
+#define DELAY_UPDATE_MENUE 400
+#define DELAY_UPDATE_MENUE_VALUE 100
 
 #define PORT_WEBSERVER 80
 

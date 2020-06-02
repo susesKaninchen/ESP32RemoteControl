@@ -32,13 +32,13 @@ Reciv_Package;
 // ############################################## Config
 typedef struct
 {
-  char addrRfSend[6] = "Adres";
-  char addrRfRecive[6] = "adres";
+  char addrRfSend[6] = "00000";
+  char addrRfRecive[6] = "00001";
   byte rfStaerke = 1;
   bool webserverEnabled = true;
   bool btEnabled = false;
   bool recive = true;
-  uint32_t timeout = 1 * 60 * 1000;
-  int validate = 34647;
+  uint16_t timeout = 60;// Sekunden
+  int validate = 4557;
 }
 Config;
