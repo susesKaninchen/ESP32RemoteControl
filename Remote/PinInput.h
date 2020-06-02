@@ -50,10 +50,10 @@ void checkTimeout() {
   Serial.print("<");
   Serial.print(millis());
   Serial.print(" -> ");
-  Serial.println((lastAction + (configSet.timeout*1000) < millis()));
+  Serial.println((lastAction + (configSet.timeout * 1000) < millis()));
   Serial.println();
 #endif
-  if (lastAction + (configSet.timeout*1000) < millis()) {
+  if (lastAction + (configSet.timeout * 1000) < millis()) {
     enablePower(false);
   }
 }
@@ -93,14 +93,14 @@ void updateInput() {
     newWebInput = false;
   } else {
     byte digitalInputs = readShiftregister();
-    stateInput.leftStick = ((digitalInputs & dataArray[7]) == dataArray[0]);
-    stateInput.rightStick = ((digitalInputs & dataArray[6]) == dataArray[1]);
-    stateInput.menueButton = ((digitalInputs & dataArray[5]) == dataArray[2]);
-    stateInput.left1 = ((digitalInputs & dataArray[4]) == dataArray[3]);
-    stateInput.left2 = ((digitalInputs & dataArray[3]) == dataArray[4]);
-    stateInput.right1 = ((digitalInputs & dataArray[2]) == dataArray[5]);
-    stateInput.right2 = ((digitalInputs & dataArray[1]) == dataArray[6]);
-    stateInput.switchTop = ((digitalInputs & dataArray[0]) == dataArray[7]);
+    stateInput.leftStick = ((digitalInputs & dataArray[7]) == dataArray[7]);
+    stateInput.rightStick = ((digitalInputs & dataArray[6]) == dataArray[6]);
+    stateInput.menueButton = ((digitalInputs & dataArray[5]) == dataArray[5]);
+    stateInput.left1 = ((digitalInputs & dataArray[4]) == dataArray[4]);
+    stateInput.left2 = ((digitalInputs & dataArray[3]) == dataArray[3]);
+    stateInput.right1 = ((digitalInputs & dataArray[2]) == dataArray[2]);
+    stateInput.right2 = ((digitalInputs & dataArray[1]) == dataArray[1]);
+    stateInput.switchTop = ((digitalInputs & dataArray[0]) == dataArray[0]);
     int tempAnalog = analogRead(PIN_STICK_LX);
     if (tempAnalog != stateInput.leftStickX) {
       if (abs(tempAnalog - (int) stateInput.leftStickX) > MIN_ANALOG_DIFF ) {
@@ -154,6 +154,7 @@ void updateInput() {
   Serial.println(stateInput.menueButton);
   Serial.println();
 #endif
+  delay(1); //WDT Reset
 }
 
 void initPins() {
