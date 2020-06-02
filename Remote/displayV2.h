@@ -367,11 +367,13 @@ void initTft() {
   tft.init();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
+  /*
+   * Aktivieren, wenn Bilder aus dem Speicher Geladen werden sollen.
   if (!SPIFFS.begin()) {
 #ifdef DEBUG_CONSOLE
     Serial.println("SPIFFS Mount Failed");
 #endif
-  }
+  }*/
 }
 
 void addRange(byte &i, byte minInt, byte maxInt) {
@@ -523,7 +525,7 @@ void drawNoRecive() {
 void drawRecive() {
   //tft.fillRect(0, 20, tft.width(), 32, TFT_BLACK);
   tft.setCursor(0, 20);
-  tft.setTextColor(TFT_GREEN, TFT_TRANSPARENT);
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.setTextSize(1);
   tft.setTextWrap(true);
   tft.println("Letztes Paket erhalten: ");
