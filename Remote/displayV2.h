@@ -575,7 +575,6 @@ void drawMenueV2(const char *text[], int len, int active) {
   tft.drawString(text[active], tft.width() / 2, tft.height() / 2 - 12, 4);
   // 2
   drawArrayJpeg(buttonMenueM, sizeof(buttonMenueM), 32, tft.height() / 2 - (40));
-  tft.setCursor(42, tft.height() / 2 - (39), 2);
   tft.setTextColor(TFT_WHITE);
   if (counterPoints >= len) {
     return;
@@ -585,11 +584,10 @@ void drawMenueV2(const char *text[], int len, int active) {
   } else {
     pointer = active - 1;
   }
-  tft.print(text[pointer]);
+  tft.drawString(text[pointer], tft.width() / 2, tft.height() / 2 - (39), 2);
   counterPoints++;
   // Pinkt4
   drawArrayJpeg(buttonMenueM, sizeof(buttonMenueM), 32, tft.height() / 2 + (16));
-  tft.setCursor(42, tft.height() / 2 + (17), 2);
   if (counterPoints >= len) {
     return;
   }
@@ -598,11 +596,10 @@ void drawMenueV2(const char *text[], int len, int active) {
   } else {
     pointer = active + 1;
   }
-  tft.print(text[pointer]);
+  tft.drawString(text[pointer], tft.width() / 2, tft.height() / 2 + (17), 2);
   counterPoints++;
   // Punkte 1
   drawArrayJpeg(buttonMenueK, sizeof(buttonMenueK), 40, tft.height() / 2 - (60));
-  tft.setCursor(48, tft.height() / 2 - (57), 1);
   tft.setTextColor(TFT_LIGHTGREY);
   if (counterPoints >= len) {
     return;
@@ -612,11 +609,10 @@ void drawMenueV2(const char *text[], int len, int active) {
   } else {
     pointer = active - 2;
   }
-  tft.print(text[pointer]);
+  tft.drawString(text[pointer], tft.width() / 2, tft.height() / 2 - (57), 1);
   counterPoints++;
   // Pinkt5
   drawArrayJpeg(buttonMenueK, sizeof(buttonMenueK), 40, tft.height() / 2 + (42));
-  tft.setCursor(48, tft.height() / 2 + (45), 1);
   if (counterPoints >= len) {
     return;
   }
@@ -625,7 +621,7 @@ void drawMenueV2(const char *text[], int len, int active) {
   } else {
     pointer = active + 2;
   }
-  tft.print(text[pointer]);
+  tft.drawString(text[pointer], tft.width() / 2, tft.height() / 2 + (45), 1);
   counterPoints++;
   tft.setTextDatum(0);
 }
