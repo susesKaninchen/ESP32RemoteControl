@@ -38,7 +38,7 @@ typedef struct
   bool webserverEnabled = true;
   bool btEnabled = false;
   bool recive = true;
-  uint16_t timeout = 60;// Sekunden
+  uint16_t timeout = 120;// Sekunden
   int validate = 4557;
 }
 Config;

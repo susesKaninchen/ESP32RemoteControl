@@ -62,6 +62,7 @@ void menueRfReciveAdresse() {
 
 void menueRFrecive() {
   menueBool(configSet.recive, menueStrings[2]);
+  saveConfig();
   //RFchangeRecive();
 }
 

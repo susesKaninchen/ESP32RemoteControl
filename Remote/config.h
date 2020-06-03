@@ -1,3 +1,4 @@
+// ############################################## Compiler DEFINES ##############################################
 // Einfach auskommentieren, wenn ihr etwas deaktivieren wollt
 //#define DEBUG_CONSOLE				// Deaktiviert die Console WIRD EMPFOHLEN ZU DEAKTIVIEREN
 //#define ONLY_WEB					// Aktiviert = Deaktiviert die Inputs an der Fernbedienung
@@ -5,7 +6,7 @@
 // ############################################## EEPROM
 #define EEPROM_SIZE 64
 
-// ############################################## Compiler DEFINES ##############################################
+// ############################################## DEFINES ##############################################
 #ifdef ONLY_WEB
 bool onlyOnline = true;
 #else
@@ -13,6 +14,7 @@ bool onlyOnline = false;
 #endif
 bool newWebInput = false;
 
+// Wenn die Analogen eingänge mehr als diesen wert abweichen wird die AFK Schwelle getriggert
 #define MIN_ANALOG_DIFF 50
 
 #define DELAY_LOOP 50 //ms
