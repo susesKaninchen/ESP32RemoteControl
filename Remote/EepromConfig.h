@@ -1,4 +1,5 @@
 extern Config configSet;
+extern const int validateConfig;
 
 #include "EEPROM.h"
 void initEEPROM() {
@@ -58,7 +59,7 @@ void loadConfig() {
   Serial.println(temp.validate);
   Serial.println();
 #endif
-  if (temp.validate != 12345) {
+  if (temp.validate != validateConfig) {
     saveConfig();
   } else {
     configSet = temp;
