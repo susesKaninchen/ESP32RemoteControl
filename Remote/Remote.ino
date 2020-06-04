@@ -101,6 +101,10 @@ void loopCPU1( void * parameter )
 #ifdef DEBUG_CONSOLE
     Serial.println("Loop: Input");
 #endif
+    RFsend();
+#ifdef DEBUG_CONSOLE
+    Serial.println("Loop: Send Package");
+#endif
     checkTimeout();
 #ifdef DEBUG_CONSOLE
     Serial.println("Loop: Timeout");
@@ -108,8 +112,6 @@ void loopCPU1( void * parameter )
     if (menueButtonPresses) {
       handleMenue();
       reloadTFT = true;
-    } else {
-      RFsend();
     }
 #ifdef DEBUG_CONSOLE
     Serial.println("Loop: Bildschirm");
@@ -129,12 +131,15 @@ void loopCPU1( void * parameter )
     if (readAkku()) {
       drawAkku(batteriespannung);
     }
-    delay(DELAY_LOOP);        // Delay to wait for packages;
-    // Deine Display (15:x)
     if (configSet.recive) {
       RFrecive();
+#ifdef DEBUG_CONSOLE
+      Serial.println("Loop: CheckRecive and Draw");
+#endif
       drawRecive();
     }
+
+    delay(DELAY_LOOP);        // Delay to wait for packages;
   }
 }
 

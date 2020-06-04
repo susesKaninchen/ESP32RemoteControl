@@ -5,9 +5,14 @@
 
 // Structs and min Values
 int missingPackages = 0;
-int validateNumber = 56985;
+int validateNumber = 56985;         // -> Diese Nummer stellt sicher, das das Empfangene Paket auch zu MEINER Fernbedienung gehört. Muss also mit der in der Fernbedienung übereinstimmen
 char addrRfSend[6] = "00001";
 char addrRfRecive[6] = "00000";
+
+unsigned long timeout = millis();
+unsigned int timeoutDiff = 100;
+
+// Bitte nicht verändern, außer sie wird auch in der Fernbedineung verändert.
 typedef struct
 {
   bool leftStick = 0;
@@ -26,6 +31,7 @@ typedef struct
 }
 Input_State;
 
+// Diese struct muss 100% mit dem Struct in der Fernbedienung übereinstimmen 100%
 typedef struct
 {
   unsigned long timestamp = 0;
@@ -64,23 +70,46 @@ void setup() {
   }
   radio.openReadingPipe(1, adressTemp);
   radio.startListening();
+  timeout = millis();
+  pinMode(2, OUTPUT);
 }
 
 
 void loop() {
+  if (millis() - timeout >= timeoutDiff) {
+    // Pakete verloren gegangen
+#ifdef DEBUG_CONSOLE
+    Serial.print("Timeout: ");
+    Serial.print(millis());
+    Serial.print(" - ");
+    Serial.print(timeout);
+    Serial.print(" >=" );
+    Serial.println(timeoutDiff);
+#endif
+    missingPackages++;
+    timeout = millis();
+    digitalWrite(2, LOW);   // turn the LED off
+  }
   // Empfangen
   if (radio.available()) {
     radio.read( &recivePackage, sizeof(Input_State) );
     if (recivePackage.validate == validateNumber) {
+      timeout = millis();
+      digitalWrite(2, HIGH);   // turn the LED on
       missingPackages = 0;
 #ifdef DEBUG_CONSOLE
-/*
-      Serial.println("empfangen");
+      //Serial.println("empfangen");
       Serial.println("Paket empfangen: ");
+      Serial.print("leftStickY: ");
       Serial.println(recivePackage.leftStickY);
+      Serial.print("leftStickX: ");
       Serial.println(recivePackage.leftStickX);
-      Serial.println(recivePackage.validate);
-      Serial.println("...");*/
+      Serial.print("rightStickY: ");
+      Serial.println(recivePackage.rightStickY);
+      Serial.print("rightStickX: ");
+      Serial.println(recivePackage.rightStickX);
+      Serial.print("menueButton: ");
+      Serial.println(recivePackage.menueButton);
       Serial.print("leftStick: ");
       Serial.println(recivePackage.leftStick);
       Serial.print("rightStick: ");
@@ -95,6 +124,8 @@ void loop() {
       Serial.println(recivePackage.right2);
       Serial.print("switchTop: ");
       Serial.println(recivePackage.switchTop);
+      Serial.print("validate: ");
+      Serial.println(recivePackage.validate);
 #endif
       // Senden Back Akku
       radio.stopListening();
