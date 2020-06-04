@@ -24,9 +24,12 @@ Input_State;
 typedef struct
 {
   unsigned long timestamp = 0;
-  char akku = 0;
+  char akku = 190;
+  int userValue_1 = 0;
+  int userValue_2 = 0;
+  char string[25];
   int validate = validateNumber;
-  // Alles was ihr so empfangen wollt
+  // Alles was ihr so empfangen wollt, muss aber auch bei Fernbedienung angepasst werden
 }
 Reciv_Package;
 

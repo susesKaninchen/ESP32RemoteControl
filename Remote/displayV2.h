@@ -214,7 +214,7 @@ void drawRecive() {
   tft.println(recivPackage.timestamp);
   tft.print("Akkustatus des Bots: ");
   tft.println((int)recivPackage.akku);
-  tft.println("");
+  tft.println(recivPackage.string);
   tft.print("Abschaltung der Fernbedienung in : ");
   tft.println((lastAction + (configSet.timeout * 1000)) - millis());
   /*tft.print("leftStickX: ");
