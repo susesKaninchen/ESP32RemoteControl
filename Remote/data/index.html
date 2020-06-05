@@ -1,4 +1,4 @@
-<!DOCTYPE HTML><html>
+<!DOCTYPE HTML><html lang="de">
 <!-- Rui Santos - Complete project details at https://RandomNerdTutorials.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -6,6 +6,7 @@ of this software and associated documentation files.
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software. -->
 <head>
+<meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <style>
@@ -24,12 +25,23 @@ copies or substantial portions of the Software. -->
 </head>
 <body>
   <h2>ESP Remote</h2>
-  <div id="chart-analog" class="container"></div>
-  <div id="chart-humidity" class="container"></div>
-  <div id="chart-pressure" class="container"></div>
+  <h1>Inputs</h1>
+  leftStick: <div id="leftStick"></div>
+  rightStick: <div id="rightStick"></div>
+  left1: <div id="left1"></div>
+  left2: <div id="left2"></div>
+  right1: <div id="right1"></div>
+  right2: <div id="right2"></div>
+  switchTop: <div id="switchTop"></div>
+  menueButton: <div id="menueButton"></div>
+  leftStickX: <div id="leftStickX"></div>
+  leftStickY: <div id="leftStickY"></div>
+  rightStickX: <div id="rightStickX"></div>
+  rightStickY: <div id="rightStickY"></div>
+  <h1>Config</h1>
 </body>
 <script>
-var chartT = new Highcharts.Chart({
+/*var chartT = new Highcharts.Chart({
   chart:{ renderTo : 'chart-analog' },
   title: { text: 'LeftX' },
   series: [{
@@ -50,102 +62,31 @@ var chartT = new Highcharts.Chart({
     //title: { text: 'Temperature (Fahrenheit)' }
   },
   credits: { enabled: false }
-});
+});*/
 setInterval(function ( ) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      var x = (new Date()).getTime(),
-          y = parseFloat(this.responseText);
-      //console.log(this.responseText);
-      if(chartT.series[0].data.length > 40) {
-        chartT.series[0].addPoint([x, y], true, true, true);
-      } else {
-        chartT.series[0].addPoint([x, y], true, false, true);
-      }
+		console.log(this.responseText);
+		var obj = JSON.parse(this.responseText);
+		console.log(obj);
+		document.querySelector('#leftStick').textContent = obj.leftStick;
+		document.querySelector('#rightStick').textContent = obj.rightStick;
+		document.querySelector('#left1').textContent = obj.left1;
+		document.querySelector('#left2').textContent = obj.left2;
+		document.querySelector('#right1').textContent = obj.right1;
+		document.querySelector('#right2').textContent = obj.right2;
+		document.querySelector('#switchTop').textContent = obj.switchTop;
+		document.querySelector('#menueButton').textContent = obj.menueButton;
+		document.querySelector('#leftStickX').textContent = obj.leftStickX;
+		document.querySelector('#leftStickY').textContent = obj.leftStickY;
+		document.querySelector('#rightStickX').textContent = obj.rightStickX;
+		document.querySelector('#rightStickY').textContent = obj.rightStickY;
     }
   };
-  xhttp.open("GET", "/temperature", true);
+  xhttp.open("GET", "/state", true);
   xhttp.send();
 }, 500 ) ;
 
-var chartH = new Highcharts.Chart({
-  chart:{ renderTo:'chart-humidity' },
-  title: { text: 'BME280 Humidity' },
-  series: [{
-    showInLegend: false,
-    data: []
-  }],
-  plotOptions: {
-    line: { animation: false,
-      dataLabels: { enabled: true }
-    }
-  },
-  xAxis: {
-    type: 'datetime',
-    dateTimeLabelFormats: { second: '%H:%M:%S' }
-  },
-  yAxis: {
-    title: { text: 'Humidity (%)' }
-  },
-  credits: { enabled: false }
-});
-setInterval(function ( ) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var x = (new Date()).getTime(),
-          y = parseFloat(this.responseText);
-      //console.log(this.responseText);
-      if(chartH.series[0].data.length > 40) {
-        chartH.series[0].addPoint([x, y], true, true, true);
-      } else {
-        chartH.series[0].addPoint([x, y], true, false, true);
-      }
-    }
-  };
-  xhttp.open("GET", "/humidity", true);
-  xhttp.send();
-}, 500 ) ;
-
-var chartP = new Highcharts.Chart({
-  chart:{ renderTo:'chart-pressure' },
-  title: { text: 'BME280 Pressure' },
-  series: [{
-    showInLegend: false,
-    data: []
-  }],
-  plotOptions: {
-    line: { animation: false,
-      dataLabels: { enabled: true }
-    },
-    series: { color: '#18009c' }
-  },
-  xAxis: {
-    type: 'datetime',
-    dateTimeLabelFormats: { second: '%H:%M:%S' }
-  },
-  yAxis: {
-    title: { text: 'Pressure (hPa)' }
-  },
-  credits: { enabled: false }
-});
-setInterval(function ( ) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var x = (new Date()).getTime(),
-          y = parseFloat(this.responseText);
-      //console.log(this.responseText);
-      if(chartP.series[0].data.length > 40) {
-        chartP.series[0].addPoint([x, y], true, true, true);
-      } else {
-        chartP.series[0].addPoint([x, y], true, false, true);
-      }
-    }
-  };
-  xhttp.open("GET", "/pressure", true);
-  xhttp.send();
-}, 500 ) ;
 </script>
 </html>

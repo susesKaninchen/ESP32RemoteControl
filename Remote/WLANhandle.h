@@ -2,7 +2,7 @@
 #include <SPIFFS.h>
 
 extern boolean reloadTFT;
-char buff[180];
+char buff[200];
 
 byte wifiState = 0;
 AsyncWebServer server(80);
@@ -10,7 +10,15 @@ AsyncWebServer server(80);
 WiFiManager wm;
 
 char* stateAsJson() {
-  sprintf(buff, "{retValue: %u, rightStick: %u, left1: %u, left2: %u, right1: %u, right2: %u, switchTop: %u, menueButton: %u, leftStickX: %u, leftStickY: %u, rightStickX: %u, rightStickY: %u}", stateInput.leftStick, stateInput.rightStick, stateInput.left1, stateInput.left2, stateInput.right1, stateInput.right2, stateInput.switchTop, stateInput.menueButton, stateInput.leftStickX, stateInput.leftStickY, stateInput.rightStickX, stateInput.rightStickY);
+  /*
+   * TODO: Status wie Akku, Adressen Stati und Antwort vom Bot hinzufügen
+    unsigned long timestamp = 0;
+    char akku = 190;
+    int userValue_1 = 0;
+    int userValue_2 = 0;
+    char string[25];
+    int validate = validateNumber;*/
+  sprintf(buff, "{\"leftStick\": %u, \"rightStick\": %u, \"left1\": %u, \"left2\": %u, \"right1\": %u, \"right2\": %u, \"switchTop\": %u, \"menueButton\": %u, \"leftStickX\": %u, \"leftStickY\": %u, \"rightStickX\": %u, \"rightStickY\": %u}", stateInput.leftStick, stateInput.rightStick, stateInput.left1, stateInput.left2, stateInput.right1, stateInput.right2, stateInput.switchTop, stateInput.menueButton, stateInput.leftStickX, stateInput.leftStickY, stateInput.rightStickX, stateInput.rightStickY);
   return buff;
 }
 
