@@ -25,6 +25,9 @@ copies or substantial portions of the Software. -->
 </head>
 <body>
   <h2>ESP Remote</h2>
+  <h1>Status</h1>
+		batteriespannung: <div id="batteriespannung"></div>
+		timeoutRest: <div id="timeoutRest"></div>
   <h1>Inputs</h1>
   leftStick: <div id="leftStick"></div>
   rightStick: <div id="rightStick"></div>
@@ -38,7 +41,23 @@ copies or substantial portions of the Software. -->
   leftStickY: <div id="leftStickY"></div>
   rightStickX: <div id="rightStickX"></div>
   rightStickY: <div id="rightStickY"></div>
+  <h1>Bot</h1>
+  timestamp: <div id="timestamp"></div>
+  akku: <div id="akku"></div>
+  userValue_1: <div id="userValue_1"></div>
+  userValue_2: <div id="userValue_2"></div>
+  string: <div id="string"></div>
+  validate: <div id="validateRecive"></div>
   <h1>Config</h1>
+  addrRfSend: <div id="addrRfSend"></div>
+  addrRfRecive: <div id="addrRfRecive"></div>
+  rfStaerke: <div id="rfStaerke"></div>
+  webserverEnabled: <div id="webserverEnabled"></div>
+  btEnabled: <div id="btEnabled"></div>
+  recive: <div id="recive"></div>
+  timeout: <div id="timeout"></div>
+  validateConfig: <div id="validateConfig"></div>
+  
 </body>
 <script>
 /*var chartT = new Highcharts.Chart({
@@ -82,6 +101,25 @@ setInterval(function ( ) {
 		document.querySelector('#leftStickY').textContent = obj.leftStickY;
 		document.querySelector('#rightStickX').textContent = obj.rightStickX;
 		document.querySelector('#rightStickY').textContent = obj.rightStickY;
+		
+		document.querySelector('#timestamp').textContent = obj.timestamp;
+		document.querySelector('#akku').textContent = obj.akku;
+		document.querySelector('#userValue_1').textContent = obj.userValue_1;
+		document.querySelector('#userValue_2').textContent = obj.userValue_2;
+		document.querySelector('#string').textContent = obj.string;
+		document.querySelector('#validateRecive').textContent = obj.validateRecive;
+		
+		document.querySelector('#addrRfSend').textContent = obj.addrRfSend;
+		document.querySelector('#addrRfRecive').textContent = obj.addrRfRecive;
+		document.querySelector('#rfStaerke').textContent = obj.rfStaerke;
+		document.querySelector('#webserverEnabled').textContent = obj.webserverEnabled;
+		document.querySelector('#btEnabled').textContent = obj.btEnabled;
+		document.querySelector('#recive').textContent = obj.recive;
+		document.querySelector('#timeout').textContent = obj.timeout;
+		document.querySelector('#validateConfig').textContent = obj.validateConfig;
+		
+		document.querySelector('#batteriespannung').textContent = obj.batteriespannung;
+		document.querySelector('#timeoutRest').textContent = obj.timeoutRest;
     }
   };
   xhttp.open("GET", "/state", true);

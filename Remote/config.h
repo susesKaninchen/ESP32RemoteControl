@@ -15,7 +15,7 @@ bool onlyOnline = false;
 bool newWebInput = false;
 
 // Wenn die Analogen eingänge mehr als diesen wert abweichen wird die AFK Schwelle getriggert
-#define MIN_ANALOG_DIFF 50
+#define MIN_ANALOG_DIFF 60
 
 #define DELAY_LOOP 50 //ms
 #define DELAY_TASK 1000 //ms

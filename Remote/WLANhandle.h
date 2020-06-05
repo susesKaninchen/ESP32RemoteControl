@@ -2,7 +2,8 @@
 #include <SPIFFS.h>
 
 extern boolean reloadTFT;
-char buff[200];
+extern float batteriespannung;
+char buff[600];
 
 byte wifiState = 0;
 AsyncWebServer server(80);
@@ -11,14 +12,11 @@ WiFiManager wm;
 
 char* stateAsJson() {
   /*
-   * TODO: Status wie Akku, Adressen Stati und Antwort vom Bot hinzufügen
-    unsigned long timestamp = 0;
-    char akku = 190;
-    int userValue_1 = 0;
-    int userValue_2 = 0;
-    char string[25];
-    int validate = validateNumber;*/
-  sprintf(buff, "{\"leftStick\": %u, \"rightStick\": %u, \"left1\": %u, \"left2\": %u, \"right1\": %u, \"right2\": %u, \"switchTop\": %u, \"menueButton\": %u, \"leftStickX\": %u, \"leftStickY\": %u, \"rightStickX\": %u, \"rightStickY\": %u}", stateInput.leftStick, stateInput.rightStick, stateInput.left1, stateInput.left2, stateInput.right1, stateInput.right2, stateInput.switchTop, stateInput.menueButton, stateInput.leftStickX, stateInput.leftStickY, stateInput.rightStickX, stateInput.rightStickY);
+     TODO: Status wie Akku, Adressen Stati und Antwort vom Bot hinzufügen
+
+    }*/
+  int timeoutValue = (lastAction + (configSet.timeout * 1000)) - millis();
+  sprintf(buff, "{\"leftStick\": %u, \"rightStick\": %u, \"left1\": %u, \"left2\": %u, \"right1\": %u, \"right2\": %u, \"switchTop\": %u, \"menueButton\": %u, \"leftStickX\": %u, \"leftStickY\": %u, \"rightStickX\": %u, \"rightStickY\": %u, \"timestamp\": %u, \"akku\": %u, \"userValue_1\": %d, \"userValue_2\": %d, \"string\": \"%s\", \"validateRecive\": %d, \"addrRfSend\": \"%s\", \"addrRfRecive\": \"%s\", \"rfStaerke\": %u, \"webserverEnabled\": %u, \"btEnabled\": %u, \"recive\": %u, \"timeout\": %u, \"validateConfig\": %d, \"batteriespannung\": %f, \"timeoutRest\": %d}", stateInput.leftStick, stateInput.rightStick, stateInput.left1, stateInput.left2, stateInput.right1, stateInput.right2, stateInput.switchTop, stateInput.menueButton, stateInput.leftStickX, stateInput.leftStickY, stateInput.rightStickX, stateInput.rightStickY, recivPackage.timestamp, recivPackage.akku, recivPackage.userValue_1, recivPackage.userValue_2, recivPackage.string, recivPackage.validate, configSet.addrRfSend, configSet.addrRfRecive, configSet.rfStaerke, configSet.webserverEnabled, configSet.btEnabled, configSet.recive, configSet.timeout, configSet.validate, batteriespannung, timeoutValue);
   return buff;
 }
 
