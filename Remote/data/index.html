@@ -23,15 +23,15 @@ copies or substantial portions of the Software. -->
   </style>
 </head>
 <body>
-  <h2>ESP Weather Station</h2>
-  <div id="chart-temperature" class="container"></div>
+  <h2>ESP Remote</h2>
+  <div id="chart-analog" class="container"></div>
   <div id="chart-humidity" class="container"></div>
   <div id="chart-pressure" class="container"></div>
 </body>
 <script>
 var chartT = new Highcharts.Chart({
-  chart:{ renderTo : 'chart-temperature' },
-  title: { text: 'BME280 Temperature' },
+  chart:{ renderTo : 'chart-analog' },
+  title: { text: 'LeftX' },
   series: [{
     showInLegend: false,
     data: []
@@ -46,7 +46,7 @@ var chartT = new Highcharts.Chart({
     dateTimeLabelFormats: { second: '%H:%M:%S' }
   },
   yAxis: {
-    title: { text: 'Temperature (Celsius)' }
+    title: { text: 'Value' }
     //title: { text: 'Temperature (Fahrenheit)' }
   },
   credits: { enabled: false }
@@ -67,7 +67,7 @@ setInterval(function ( ) {
   };
   xhttp.open("GET", "/temperature", true);
   xhttp.send();
-}, 30000 ) ;
+}, 500 ) ;
 
 var chartH = new Highcharts.Chart({
   chart:{ renderTo:'chart-humidity' },
@@ -106,7 +106,7 @@ setInterval(function ( ) {
   };
   xhttp.open("GET", "/humidity", true);
   xhttp.send();
-}, 30000 ) ;
+}, 500 ) ;
 
 var chartP = new Highcharts.Chart({
   chart:{ renderTo:'chart-pressure' },
@@ -146,6 +146,6 @@ setInterval(function ( ) {
   };
   xhttp.open("GET", "/pressure", true);
   xhttp.send();
-}, 30000 ) ;
+}, 500 ) ;
 </script>
 </html>

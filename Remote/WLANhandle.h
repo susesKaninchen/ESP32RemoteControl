@@ -1,8 +1,18 @@
+#include <ESPAsyncWebServer.h>
+#include <SPIFFS.h>
+
 extern boolean reloadTFT;
+char buff[180];
 
 byte wifiState = 0;
-WiFiServer server(PORT_WEBSERVER);
+AsyncWebServer server(80);
+//WiFiServer server(PORT_WEBSERVER);
 WiFiManager wm;
+
+char* stateAsJson() {
+  sprintf(buff, "{retValue: %u, rightStick: %u, left1: %u, left2: %u, right1: %u, right2: %u, switchTop: %u, menueButton: %u, leftStickX: %u, leftStickY: %u, rightStickX: %u, rightStickY: %u}", stateInput.leftStick, stateInput.rightStick, stateInput.left1, stateInput.left2, stateInput.right1, stateInput.right2, stateInput.switchTop, stateInput.menueButton, stateInput.leftStickX, stateInput.leftStickY, stateInput.rightStickX, stateInput.rightStickY);
+  return buff;
+}
 
 void setWifiState(byte state) {
   wifiState = state;
@@ -30,8 +40,8 @@ void initWifi() {
   if (!wm.autoConnect("Fernbedienung")) {
     setWifiState(0);
     configSet.webserverEnabled = false;
-    server.stop();
-    server = NULL;
+    //server.stop();
+    //server = NULL;
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
     btStop();
@@ -51,16 +61,28 @@ void initWifi() {
       type = "filesystem";
     // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
   });
-
   ArduinoOTA.begin();
 
-
-  server.begin();
 #ifdef DEBUG_CONSOLE
   Serial.println("IP:");
   Serial.println(WiFi.localIP());
   Serial.println();
 #endif
+  if (!SPIFFS.begin()) {
+#ifdef DEBUG_CONSOLE
+    Serial.println("SPIFFS Mount Failed");
+#endif
+  }
+
+
+  // ---------- Webserver ---------
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(SPIFFS, "/index.html");
+  });
+  server.on("/state", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send_P(200, "text/plain", stateAsJson());
+  });
+  server.begin();
 }
 
 void handleWifi() {
@@ -72,17 +94,18 @@ void handleWifi() {
   //handleBLE();
   if (!configSet.webserverEnabled) {
     setWifiState(3);
-    server.stop();
-    server = NULL;
+    //server.stop();
+    //server = NULL;
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
     btStop();
     vTaskDelete(NULL);//  Kill this Task
   }
   ArduinoOTA.handle();
-  WiFiClient client = server.available();   // Listen for incoming clients
+  /*
+    WiFiClient client = server.available();   // Listen for incoming clients
 
-  if (client) {                             // If a new client connects,
+    if (client) {                             // If a new client connects,
     String currentLine = "";                // make a String to hold incoming data from the client
     while (client.connected()) {            // loop while the client's connected
       if (client.available()) {             // if there's bytes to read from the client,
@@ -102,29 +125,29 @@ void handleWifi() {
             // turns the GPIOs on and off
 
             if (header.indexOf("GET /menue") >= 0) {
-#ifdef DEBUG_CONSOLE
+    #ifdef DEBUG_CONSOLE
               Serial.println("menueButtonPresses on");
-#endif
+    #endif
               stateInput.menueButton = true;
             } else if (header.indexOf("GET /up") >= 0) {
-#ifdef DEBUG_CONSOLE
+    #ifdef DEBUG_CONSOLE
               Serial.println("stateInput.rightStickY on");
-#endif
+    #endif
               stateInput.rightStickY = 1100;
             } else if (header.indexOf("GET /down") >= 0) {
-#ifdef DEBUG_CONSOLE
+    #ifdef DEBUG_CONSOLE
               Serial.println("stateInput.rightStickY on");
-#endif
+    #endif
               stateInput.rightStickY = 100;
             } else if (header.indexOf("GET /right") >= 0) {
-#ifdef DEBUG_CONSOLE
+    #ifdef DEBUG_CONSOLE
               Serial.println("stateInput.rightStickX on");
-#endif
+    #endif
               stateInput.rightStickX = 1100;
             } else if (header.indexOf("GET /left") >= 0) {
-#ifdef DEBUG_CONSOLE
+    #ifdef DEBUG_CONSOLE
               Serial.println("stateInput.rightStickX on");
-#endif
+    #endif
               stateInput.rightStickX = 100;
             } else {
               stateInput.rightStickX = 512;
@@ -197,5 +220,5 @@ void handleWifi() {
     header = "";
     // Close the connection
     client.stop();
-  }
+    }*/
 }

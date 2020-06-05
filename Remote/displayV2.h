@@ -69,13 +69,6 @@ void initTft() {
   tft.fillScreen(TFT_BLACK);
   tft.setTextSize(1);
   tft.setTextDatum(0);
-  /*
-     Aktivieren, wenn Bilder aus dem Speicher Geladen werden sollen.
-    if (!SPIFFS.begin()) {
-    #ifdef DEBUG_CONSOLE
-    Serial.println("SPIFFS Mount Failed");
-    #endif
-    }*/
 }
 
 // ############################################## TFT ICONS
