@@ -154,7 +154,8 @@ void updateInput() {
   Serial.println(stateInput.menueButton);
   Serial.println();
 #endif
-  delay(1); //WDT Reset
+   vTaskDelay(1);
+  //delay(1); //WDT Reset
 }
 
 void initPins() {
@@ -166,7 +167,8 @@ void initPins() {
   pinMode(PIN_SR_INPUT, INPUT);
   enablePower(true);
   // Analog
-  //analogSetSamples(1);
-  //analogSetCycles(50);
+  //analogSetSamples(5);
+  //analogSetCycles(200);
+  //analogSetClockDiv(200);
   analogReadResolution(10);
 }

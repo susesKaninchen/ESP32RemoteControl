@@ -121,16 +121,18 @@ void drawAkku(float akkuValue) {
   3,6V - 0%
 */
 
-void drawWifi(bool active) {
+void drawWifi(byte state) {//0 red, 1 green, 2 yellow, 3 blue
   uint16_t color;
-  if (active) {
-    if (wlanVerbunden) {
-      color = TFT_GREEN;
-    } else {
-      color = TFT_YELLOW;
-    }
-  } else {
+  if (state == 0) {
     color = TFT_RED;
+  } else if (state == 1) {
+    color = TFT_GREEN;
+  } else if (state == 2) {
+    color = TFT_YELLOW;
+  } else if (state == 3) {
+    color = TFT_BLUE;
+  } else {
+    color = TFT_BROWN;
   }
   tft.drawLine(33, 7, 37, 3, color);
   tft.drawLine(37, 3, 40, 3, color);
@@ -143,7 +145,7 @@ void drawWifi(bool active) {
   tft.drawRect(38, 9 , 2, 2, color);
 #ifdef DEBUG_CONSOLE
   Serial.println("Update TFT: Wlan ");
-  Serial.println(active);
+  Serial.println(state);
   Serial.println();
 #endif
 }

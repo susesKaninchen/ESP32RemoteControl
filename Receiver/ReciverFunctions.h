@@ -3,6 +3,9 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
+extern void reactToPackage();
+extern void reactToTimeout();
+
 // Structs and min Values
 int missingPackages = 0;
 int validateNumber = 56985;         // -> Diese Nummer stellt sicher, das das Empfangene Paket auch zu MEINER Fernbedienung gehört. Muss also mit der in der Fernbedienung übereinstimmen
@@ -90,6 +93,7 @@ void reciveLoop() {
     Serial.println(timeoutDiff);
 #endif
     missingPackages++;
+    reactToTimeout();
     timeout = millis();
     digitalWrite(2, LOW);   // turn the LED off
   }
@@ -97,6 +101,7 @@ void reciveLoop() {
   if (radio.available()) {
     radio.read( &recivePackage, sizeof(Input_State) );
     if (recivePackage.validate == validateNumber) {
+      reactToPackage();
       timeout = millis();
       digitalWrite(2, HIGH);   // turn the LED on
       missingPackages = 0;
