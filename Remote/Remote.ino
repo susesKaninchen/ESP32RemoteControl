@@ -71,7 +71,6 @@ void menueRFrecive() {
 // ############################################## Programm ##############################################
 
 void setup() {
-  Serial.begin(115200);
 #ifdef DEBUG_CONSOLE
   Serial.begin(115200);
   Serial.println("Starte Programm und deffiniere Pins");

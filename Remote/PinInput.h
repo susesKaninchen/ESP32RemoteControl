@@ -89,7 +89,6 @@ unsigned long readShiftregister() {
   digitalWrite(PIN_SR_SH_CP, LOW);    // Reset Clock
   digitalWrite(PIN_SR_ST_CP, HIGH);   // Ausgeben
   // Vergleiche Eingaben
-  Serial.println(tempState);
   if (lastShiftState != tempState) {
     lastAction = millis();
     lastShiftState = tempState;
