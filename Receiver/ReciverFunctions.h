@@ -26,6 +26,7 @@ typedef struct
   bool right2 = 0;
   bool switchTop = 0;
   bool menueButton = 0;
+  long buttonStates = 0;
   unsigned int leftStickX = 512;
   unsigned int leftStickY = 512;
   unsigned int rightStickX = 512;

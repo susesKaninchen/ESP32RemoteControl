@@ -3,7 +3,8 @@ extern Input_State stateInput;
 
 // ############################################## Shiftregister
 const PROGMEM byte dataArray[] = { 1, 2, 4, 8, 16, 32, 64, 128, 0};
-byte lastShiftState = 0;
+const byte dataArrayLen = 31;
+unsigned long lastShiftState = 0;
 
 // ############################################## Power MOSFET
 long lastAction = millis();
@@ -59,22 +60,41 @@ void checkTimeout() {
 }
 
 // ############################################## Shiftregister
-byte readShiftregister() {
-  byte tempState = 0;
-  for (int j = 0; j < 9; j++) {
-    //ground latchPin and hold low for as long as you are transmitting
-    digitalWrite(PIN_SR_ST_CP, LOW);
-    //move 'em out
-    shiftOut(PIN_SR_DS, PIN_SR_SH_CP, LSBFIRST , (dataArray[j]));
-    //return the latch pin high to signal chip that it
-    //no longer needs to listen for information
-    digitalWrite(PIN_SR_ST_CP, HIGH);
-    delayMicroseconds(1);
-    tempState += (digitalRead(PIN_SR_INPUT) * dataArray[j]);
+unsigned long readShiftregister() {
+  // Momentan nur 4 Register
+  unsigned long tempState = 0;
+  // Shift first HIGH BIT
+  digitalWrite(PIN_SR_ST_CP, LOW);      // Start Writingmode
+  digitalWrite(PIN_SR_SH_CP, LOW);      // clock to low
+  digitalWrite(PIN_SR_DS, HIGH);        // Bite HIGH
+  digitalWrite(PIN_SR_SH_CP, HIGH);     // Trigger Clock to store Bite
+  digitalWrite(PIN_SR_SH_CP, LOW);      // Reset Clock
+  digitalWrite(PIN_SR_ST_CP, HIGH);     // Ausgeben
+  digitalWrite(PIN_SR_DS, LOW);         // Bite to LOW
+  vTaskDelay(1);                        // wait to discharge Pins AND Reset WDT
+  tempState += digitalRead(PIN_SR_INPUT);
+  //Shift alle LOW BITs
+  for (int j = 0; j < dataArrayLen; j++) {
+    tempState = tempState << 1;         // Nächste stelle
+    digitalWrite(PIN_SR_ST_CP, LOW);    // Start Writingmode
+    digitalWrite(PIN_SR_SH_CP, HIGH);   // Trigger Clock to store Bite
+    digitalWrite(PIN_SR_SH_CP, LOW);    // Reset Clock
+    digitalWrite(PIN_SR_ST_CP, HIGH);   // Ausgeben
+    vTaskDelay(1);                      // wait to discharge Pins AND Reset WDT
+    tempState += digitalRead(PIN_SR_INPUT);
   }
+  // Shift last Bit out
+  digitalWrite(PIN_SR_ST_CP, LOW);    // Start Writingmode
+  digitalWrite(PIN_SR_SH_CP, HIGH);   // Trigger Clock to store Bite
+  digitalWrite(PIN_SR_SH_CP, LOW);    // Reset Clock
+  digitalWrite(PIN_SR_ST_CP, HIGH);   // Ausgeben
+  // Vergleiche Eingaben
+  Serial.println(tempState);
   if (lastShiftState != tempState) {
     lastAction = millis();
+    lastShiftState = tempState;
   }
+  vTaskDelay(1);                      // wait to Reset WDT
 #ifdef DEBUG_CONSOLE
   Serial.print("Input: ");
   Serial.println(tempState);
@@ -85,6 +105,18 @@ byte readShiftregister() {
   return tempState;
 }
 
+void updateInputPins(unsigned long shiftStates) {
+  stateInput.buttonStates = shiftStates;
+  stateInput.leftStick = ((shiftStates & (1 << 31)) == (1 << 31));
+  stateInput.rightStick = ((shiftStates & (1 << 30)) == (1 << 30));
+  stateInput.menueButton = ((shiftStates & (1 << 29)) == (1 << 29));
+  stateInput.left1 = ((shiftStates & (1 << 28)) == (1 << 28));
+  stateInput.left2 = ((shiftStates & (1 << 27)) == (1 << 27));
+  stateInput.right1 = ((shiftStates & (1 << 26)) == (1 << 26));
+  stateInput.right2 = ((shiftStates & (1 << 25)) == (1 << 25));
+  stateInput.switchTop = ((shiftStates & (1 << 24)) == (1 << 24));
+}
+
 void updateInput() {
   if (onlyOnline) {
     while (!newWebInput) {
@@ -92,15 +124,7 @@ void updateInput() {
     }
     newWebInput = false;
   } else {
-    byte digitalInputs = readShiftregister();
-    stateInput.leftStick = ((digitalInputs & dataArray[7]) == dataArray[7]);
-    stateInput.rightStick = ((digitalInputs & dataArray[6]) == dataArray[6]);
-    stateInput.menueButton = ((digitalInputs & dataArray[5]) == dataArray[5]);
-    stateInput.left1 = ((digitalInputs & dataArray[4]) == dataArray[4]);
-    stateInput.left2 = ((digitalInputs & dataArray[3]) == dataArray[3]);
-    stateInput.right1 = ((digitalInputs & dataArray[2]) == dataArray[2]);
-    stateInput.right2 = ((digitalInputs & dataArray[1]) == dataArray[1]);
-    stateInput.switchTop = ((digitalInputs & dataArray[0]) == dataArray[0]);
+    updateInputPins(readShiftregister());
     int tempAnalog = analogRead(PIN_STICK_LX);
     if (tempAnalog != stateInput.leftStickX) {
       if (abs(tempAnalog - (int) stateInput.leftStickX) > MIN_ANALOG_DIFF ) {
@@ -154,7 +178,7 @@ void updateInput() {
   Serial.println(stateInput.menueButton);
   Serial.println();
 #endif
-   vTaskDelay(1);
+  vTaskDelay(1);
   //delay(1); //WDT Reset
 }
 

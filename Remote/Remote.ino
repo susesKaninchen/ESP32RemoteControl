@@ -71,6 +71,7 @@ void menueRFrecive() {
 // ############################################## Programm ##############################################
 
 void setup() {
+  Serial.begin(115200);
 #ifdef DEBUG_CONSOLE
   Serial.begin(115200);
   Serial.println("Starte Programm und deffiniere Pins");
@@ -139,7 +140,6 @@ void loopCPU1( void * parameter )
 #endif
       drawRecive();
     }
-
     delay(DELAY_LOOP);        // Delay to wait for packages;
   }
 }

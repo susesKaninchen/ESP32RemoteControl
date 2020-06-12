@@ -29,6 +29,7 @@ copies or substantial portions of the Software. -->
 		batteriespannung: <div id="batteriespannung"></div>
 		timeoutRest: <div id="timeoutRest"></div>
   <h1>Inputs</h1>
+  Buttons: <div id="Buttons"></div>
   leftStick: <div id="leftStick"></div>
   rightStick: <div id="rightStick"></div>
   left1: <div id="left1"></div>
@@ -89,6 +90,7 @@ setInterval(function ( ) {
 		console.log(this.responseText);
 		var obj = JSON.parse(this.responseText);
 		console.log(obj);
+		document.querySelector('#Buttons').textContent = obj.Buttons;
 		document.querySelector('#leftStick').textContent = obj.leftStick;
 		document.querySelector('#rightStick').textContent = obj.rightStick;
 		document.querySelector('#left1').textContent = obj.left1;
