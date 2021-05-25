@@ -148,6 +148,7 @@ void loopCPU2( void * parameter )
   initWifi();
   for (;;) {
     handleWifi();
+    yield();
   }
 }
 

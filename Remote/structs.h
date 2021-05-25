@@ -1,23 +1,40 @@
 // ############################################## Inputs
 
-int validateNumber = 56985; // Diese nummer muss mit dem Empfänger übereinstimmen!!
-const int validateConfig = 651354;
+int validateNumber = 56986; // Diese nummer muss mit dem Empfänger übereinstimmen!!
+const int validateConfig = 56786;
 
 typedef struct
 {
-  bool leftStick = 0;
-  bool rightStick = 0;
-  bool left1 = 0;
-  bool left2 = 0;
-  bool right1 = 0;
-  bool right2 = 0;
-  bool switchTop = 0;
-  bool menueButton = 0;
-  unsigned long buttonStates = 0;
-  unsigned int leftStickX = 512;
-  unsigned int leftStickY = 512;
-  unsigned int rightStickX = 512;
-  unsigned int rightStickY = 512;
+  byte PA0 = 0;
+  byte PA1 = 0;
+  byte PA2 = 0;
+  byte PA3 = 0;
+  byte PA4 = 0;
+  byte PA5 = 0;
+  byte PA6 = 0;
+  byte PA7 = 0;
+
+  byte PB0 = 0;
+  byte PB1 = 0;
+  byte PB2 = 0;
+  byte PB3 = 0;
+  byte PB4 = 0;
+  byte PB5 = 0;
+  byte PB6 = 0;
+  byte PB7 = 0;
+
+  byte PC0 = 0;
+  byte PC1 = 0;
+  byte PC4 = 0;
+  byte PC5 = 0;
+  byte PC6 = 0;
+  byte PC7 = 0;
+
+  byte PD0 = 0;
+  byte PD1 = 0;
+  byte PD2 = 0;
+  byte PD3 = 0;
+  
   int validate = validateNumber;
 }
 Input_State;

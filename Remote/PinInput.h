@@ -1,11 +1,6 @@
 extern Config configSet;
 extern Input_State stateInput;
 
-// ############################################## Shiftregister
-const PROGMEM byte dataArray[] = { 1, 2, 4, 8, 16, 32, 64, 128, 0};
-const byte dataArrayLen = 31;
-unsigned long lastShiftState = 0;
-
 // ############################################## Power MOSFET
 long lastAction = millis();
 float batteriespannung = 0;
@@ -59,61 +54,8 @@ void checkTimeout() {
   }
 }
 
-// ############################################## Shiftregister
-unsigned long readShiftregister() {
-  // Momentan nur 4 Register
-  unsigned long tempState = 0;
-  // Shift first HIGH BIT
-  digitalWrite(PIN_SR_ST_CP, LOW);      // Start Writingmode
-  digitalWrite(PIN_SR_SH_CP, LOW);      // clock to low
-  digitalWrite(PIN_SR_DS, HIGH);        // Bite HIGH
-  digitalWrite(PIN_SR_SH_CP, HIGH);     // Trigger Clock to store Bite
-  digitalWrite(PIN_SR_SH_CP, LOW);      // Reset Clock
-  digitalWrite(PIN_SR_ST_CP, HIGH);     // Ausgeben
-  digitalWrite(PIN_SR_DS, LOW);         // Bite to LOW
-  vTaskDelay(1);                        // wait to discharge Pins AND Reset WDT
-  tempState += digitalRead(PIN_SR_INPUT);
-  //Shift alle LOW BITs
-  for (int j = 0; j < dataArrayLen; j++) {
-    tempState = tempState << 1;         // Nächste stelle
-    digitalWrite(PIN_SR_ST_CP, LOW);    // Start Writingmode
-    digitalWrite(PIN_SR_SH_CP, HIGH);   // Trigger Clock to store Bite
-    digitalWrite(PIN_SR_SH_CP, LOW);    // Reset Clock
-    digitalWrite(PIN_SR_ST_CP, HIGH);   // Ausgeben
-    vTaskDelay(1);                      // wait to discharge Pins AND Reset WDT
-    tempState += digitalRead(PIN_SR_INPUT);
-  }
-  // Shift last Bit out
-  digitalWrite(PIN_SR_ST_CP, LOW);    // Start Writingmode
-  digitalWrite(PIN_SR_SH_CP, HIGH);   // Trigger Clock to store Bite
-  digitalWrite(PIN_SR_SH_CP, LOW);    // Reset Clock
-  digitalWrite(PIN_SR_ST_CP, HIGH);   // Ausgeben
-  // Vergleiche Eingaben
-  if (lastShiftState != tempState) {
-    lastAction = millis();
-    lastShiftState = tempState;
-  }
-  vTaskDelay(1);                      // wait to Reset WDT
-#ifdef DEBUG_CONSOLE
-  Serial.print("Input: ");
-  Serial.println(tempState);
-  Serial.print("Input changed: ");
-  Serial.println((lastShiftState != tempState));
-  Serial.println();
-#endif
-  return tempState;
-}
-
-void updateInputPins(unsigned long shiftStates) {
-  stateInput.buttonStates = shiftStates;
-  stateInput.leftStick = ((shiftStates & (1 << 31)) == (1 << 31));
-  stateInput.rightStick = ((shiftStates & (1 << 30)) == (1 << 30));
-  stateInput.menueButton = ((shiftStates & (1 << 29)) == (1 << 29));
-  stateInput.left1 = ((shiftStates & (1 << 28)) == (1 << 28));
-  stateInput.left2 = ((shiftStates & (1 << 27)) == (1 << 27));
-  stateInput.right1 = ((shiftStates & (1 << 26)) == (1 << 26));
-  stateInput.right2 = ((shiftStates & (1 << 25)) == (1 << 25));
-  stateInput.switchTop = ((shiftStates & (1 << 24)) == (1 << 24));
+void readAttiny(){
+  
 }
 
 void updateInput() {
@@ -123,35 +65,15 @@ void updateInput() {
     }
     newWebInput = false;
   } else {
-    updateInputPins(readShiftregister());
-    int tempAnalog = analogRead(PIN_STICK_LX);
+    readAttiny();
+    //TODO: Alle Inpus definnieren.
+    /*int tempAnalog = analogRead(PIN_STICK_LX);
     if (tempAnalog != stateInput.leftStickX) {
       if (abs(tempAnalog - (int) stateInput.leftStickX) > MIN_ANALOG_DIFF ) {
         lastAction = millis();
       }
       stateInput.leftStickX = tempAnalog;
-    }
-    tempAnalog = analogRead(PIN_STICK_LY);
-    if (tempAnalog != stateInput.leftStickY) {
-      if (abs(tempAnalog - (int) stateInput.leftStickY) > MIN_ANALOG_DIFF ) {
-        lastAction = millis();
-      }
-      stateInput.leftStickY = tempAnalog;
-    }
-    tempAnalog = analogRead(PIN_STICK_RX);
-    if (tempAnalog != stateInput.rightStickX) {
-      if (abs(tempAnalog - (int) stateInput.rightStickX) > MIN_ANALOG_DIFF ) {
-        lastAction = millis();
-      }
-      stateInput.rightStickX = tempAnalog;
-    }
-    tempAnalog = analogRead(PIN_STICK_RY);
-    if (tempAnalog != stateInput.rightStickY) {
-      if (abs(tempAnalog - (int) stateInput.rightStickY) > MIN_ANALOG_DIFF ) {
-        lastAction = millis();
-      }
-      stateInput.rightStickY = tempAnalog;
-    }
+    }*/
   }
 #ifdef DEBUG_CONSOLE
   Serial.println("Inputs:");
@@ -183,11 +105,7 @@ void updateInput() {
 
 void initPins() {
   // Pins
-  pinMode(PIN_SR_ST_CP, OUTPUT);
-  pinMode(PIN_SR_SH_CP, OUTPUT);
-  pinMode(PIN_SR_DS, OUTPUT);
   pinMode(PIN_MOSFET, OUTPUT);
-  pinMode(PIN_SR_INPUT, INPUT);
   enablePower(true);
   // Analog
   //analogSetSamples(5);

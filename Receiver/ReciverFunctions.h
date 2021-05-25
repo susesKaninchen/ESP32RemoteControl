@@ -8,7 +8,7 @@ extern void reactToTimeout();
 
 // Structs and min Values
 int missingPackages = 0;
-int validateNumber = 56985;         // -> Diese Nummer stellt sicher, das das Empfangene Paket auch zu MEINER Fernbedienung gehört. Muss also mit der in der Fernbedienung übereinstimmen
+int validateNumber = 56986;         // -> Diese Nummer stellt sicher, das das Empfangene Paket auch zu MEINER Fernbedienung gehört. Muss also mit der in der Fernbedienung übereinstimmen
 char addrRfSend[6] = "00001";
 char addrRfRecive[6] = "00000";
 
