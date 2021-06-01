@@ -5,6 +5,14 @@ const int validateConfig = 56786;
 
 typedef struct
 {
+  byte menue = 0;
+  byte horizontal = 127;
+  byte vertikal = 127;
+}
+Menue_State;
+
+typedef struct
+{
   byte PA0 = 0;
   byte PA1 = 0;
   byte PA2 = 0;

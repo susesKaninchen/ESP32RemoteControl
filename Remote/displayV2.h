@@ -1,11 +1,14 @@
 // ############################################## Includes ##############################################
 #include <pgmspace.h>
-#include <TFT_eSPI.h>
+#include <TFT_eSPI.h>//https://github.com/Bodmer/TFT_eSPI
 #include <SPI.h>
 #include <FS.h>
 #include <JPEGDecoder.h>
 #include "JPEG_functions.h"
 #include "images.h"
+
+#define MENUE_LOW 20
+#define MENUE_HIGH 230
 
 extern void updateInput();
 extern void saveConfig();
@@ -18,6 +21,7 @@ extern void menueRFpower();
 extern void menueRfSendAdresse();
 
 extern Input_State stateInput;
+extern Menue_State menue;
 extern Reciv_Package recivPackage;
 extern long lastAction;
 
@@ -33,19 +37,19 @@ bool wlanVerbunden = false;
 
 // ############################################## Hilfsfunktionen
 bool isLeft() {
-  return stateInput.leftStickX < 512 - 400 || stateInput.rightStickX < 512 - 400;
+  return menue.horizontal < MENUE_LOW;
 }
 
 bool isRight() {
-  return stateInput.leftStickX > 512 + 400 || stateInput.rightStickX > 512 + 400;
+  return menue.horizontal > MENUE_HIGH;
 }
 
 bool isTop() {
-  return stateInput.leftStickY > 512 + 400 || stateInput.rightStickY > 512 + 400;
+  return menue.vertikal > MENUE_HIGH;
 }
 
 bool isDown() {
-  return stateInput.leftStickY < 512 - 400 || stateInput.rightStickY < 512 - 400 ;
+  return menue.vertikal < MENUE_LOW;
 }
 
 

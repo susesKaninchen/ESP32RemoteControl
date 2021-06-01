@@ -7,7 +7,6 @@ char buff[600];
 
 byte wifiState = 0;
 AsyncWebServer server(80);
-//WiFiServer server(PORT_WEBSERVER);
 WiFiManager wm;
 
 char* stateAsJson() {
@@ -16,7 +15,11 @@ char* stateAsJson() {
 
     }*/
   int timeoutValue = (lastAction + (configSet.timeout * 1000)) - millis();
-  sprintf(buff, "{\"Buttons\": %u, \"leftStick\": %u, \"rightStick\": %u, \"left1\": %u, \"left2\": %u, \"right1\": %u, \"right2\": %u, \"switchTop\": %u, \"menueButton\": %u, \"leftStickX\": %u, \"leftStickY\": %u, \"rightStickX\": %u, \"rightStickY\": %u, \"timestamp\": %u, \"akku\": %u, \"userValue_1\": %d, \"userValue_2\": %d, \"string\": \"%s\", \"validateRecive\": %d, \"addrRfSend\": \"%s\", \"addrRfRecive\": \"%s\", \"rfStaerke\": %u, \"webserverEnabled\": %u, \"btEnabled\": %u, \"recive\": %u, \"timeout\": %u, \"validateConfig\": %d, \"batteriespannung\": %f, \"timeoutRest\": %d}", stateInput.buttonStates, stateInput.leftStick, stateInput.rightStick, stateInput.left1, stateInput.left2, stateInput.right1, stateInput.right2, stateInput.switchTop, stateInput.menueButton, stateInput.leftStickX, stateInput.leftStickY, stateInput.rightStickX, stateInput.rightStickY, recivPackage.timestamp, recivPackage.akku, recivPackage.userValue_1, recivPackage.userValue_2, recivPackage.string, recivPackage.validate, configSet.addrRfSend, configSet.addrRfRecive, configSet.rfStaerke, configSet.webserverEnabled, configSet.btEnabled, configSet.recive, configSet.timeout, configSet.validate, batteriespannung, timeoutValue);
+  /*String content = "{";
+  for ( int ount = 0; count < 27; count++){
+    content = content + "\"" + count + "\":" + 
+  }*/
+//  sprintf(buff, "{\"Buttons\": %u, \"leftStick\": %u, \"rightStick\": %u, \"left1\": %u, \"left2\": %u, \"right1\": %u, \"right2\": %u, \"switchTop\": %u, \"menueButton\": %u, \"leftStickX\": %u, \"leftStickY\": %u, \"rightStickX\": %u, \"rightStickY\": %u, \"timestamp\": %u, \"akku\": %u, \"userValue_1\": %d, \"userValue_2\": %d, \"string\": \"%s\", \"validateRecive\": %d, \"addrRfSend\": \"%s\", \"addrRfRecive\": \"%s\", \"rfStaerke\": %u, \"webserverEnabled\": %u, \"btEnabled\": %u, \"recive\": %u, \"timeout\": %u, \"validateConfig\": %d, \"batteriespannung\": %f, \"timeoutRest\": %d}", stateInput.buttonStates, stateInput.leftStick, stateInput.rightStick, stateInput.left1, stateInput.left2, stateInput.right1, stateInput.right2, stateInput.switchTop, stateInput.menueButton, stateInput.leftStickX, stateInput.leftStickY, stateInput.rightStickX, stateInput.rightStickY, recivPackage.timestamp, recivPackage.akku, recivPackage.userValue_1, recivPackage.userValue_2, recivPackage.string, recivPackage.validate, configSet.addrRfSend, configSet.addrRfRecive, configSet.rfStaerke, configSet.webserverEnabled, configSet.btEnabled, configSet.recive, configSet.timeout, configSet.validate, batteriespannung, timeoutValue);
   return buff;
 }
 

@@ -23,6 +23,8 @@ Input_State stateInput;
 
 Reciv_Package recivPackage;
 
+Menue_State menue;
+
 // ############################################## Config
 Config configSet;
 
@@ -110,7 +112,7 @@ void loopCPU1( void * parameter )
 #ifdef DEBUG_CONSOLE
     Serial.println("Loop: Timeout");
 #endif
-    if (stateInput.menueButton) {
+    if (menue.menue) {
       handleMenue();
       reloadTFT = true;
     }

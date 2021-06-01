@@ -1,6 +1,6 @@
 #include <SPI.h>
 #include <nRF24L01.h>
-#include <RF24.h>
+#include <RF24.h>// Mehr infos: https://github.com/nRF24/RF24/blob/master/RF24.h
 
 extern Config configSet;
 extern Input_State stateInput;
